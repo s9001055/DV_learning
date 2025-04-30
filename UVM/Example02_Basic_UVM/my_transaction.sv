@@ -11,6 +11,7 @@ class my_transaction extends uvm_sequence_item;
     }
 
     function bit[31:0] calc_crc();
+        // 計算 CRC function (未實作)
         return 32'h0;
     endfunction
 
