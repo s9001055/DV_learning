@@ -7,7 +7,7 @@ module tb;
     coverpoint mode {
         // 只要兩個 bin 都達成，覆蓋率為 100%，只達成一個 50%
         bins two = {2};                 // 只要 random 出 2，這個 bin 代表成功
-    	bins five = {5};                // 只要 random 出 2，這個 bin 代表成功
+    	  bins five = {5};                // 只要 random 出 2，這個 bin 代表成功
         // bins six_seven = {[6:7]};    // 只要 random 出 6 or 7，這個 bin 代表成功
         // bins range[] = {[0:$]};      // 會直接分成8個bins，每個 bins 分別為 0, 1, 2, ... , 7
         // bins range[4] = {[0:$]};     // 會分成 4 個bins，每個 bins 分別為 [0:1], [2:3], [4:5], [6:7]
