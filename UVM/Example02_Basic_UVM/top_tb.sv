@@ -27,13 +27,19 @@ initial begin
 end
 
 initial begin
-    // 由於 run_test("my_env"); 是由 my_env 開始建立，所以路徑變為 uvm_test_top.drv
-    // my_env 成為 uvm_test_top
-    // uvm_test_top是UVM自動創建的樹根的名字
+    //// 還沒封裝成 agent
+    //// 由於 run_test("my_env"); 是由 my_env 開始建立，所以路徑變為 uvm_test_top.drv
+    //// my_env 成為 uvm_test_top
+    //// uvm_test_top是UVM自動創建的樹根的名字
     // 而drv則是在my_env的build_phase中產生實體drv時傳遞過去的名字
-    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.drv", "vif", input_if);  
-    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.i_mon", "vif", input_if);
-    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.o_mon", "vif2", output_if);
+    // uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.drv", "vif", input_if);  
+    // uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.i_mon", "vif", input_if);
+    // uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.o_mon", "vif2", output_if);
+
+    // 封裝成 agent
+    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.i_agt.drv", "vif", input_if);
+    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.i_agt.mon", "vif", input_if);
+    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.o_agt.mon", "vif", output_if);
 end
 
 initial begin
