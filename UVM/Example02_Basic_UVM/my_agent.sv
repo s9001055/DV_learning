@@ -2,6 +2,8 @@ class my_agent extends uvm_agent ;
     my_driver drv;
     my_monitor mon;
 
+    uvm_analysis_port #(my_transaction)  ap;
+
     function new(string name, uvm_component parent);
         super.new(name, parent);
     endfunction
@@ -28,4 +30,9 @@ endfunction
 
 function void my_agent::connect_phase(uvm_phase phase);
     super.connect_phase(phase);
+
+   // 根據connect_phase的執行順序，
+   // my_agent的connect_phase的執行順序早於my_env的connect_phase的執行順序，
+   // 從而可以保證執行到i_agt.ap.connect語句時，i_agt.ap不是一個空指標。
+    ap = mon.ap;
 endfunction

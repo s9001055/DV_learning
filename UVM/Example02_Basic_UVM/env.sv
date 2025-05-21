@@ -7,6 +7,9 @@ class my_env extends uvm_env;
     // 封裝成 agent
     my_agent i_agt;
     my_agent o_agt;
+    my_model  mdl;
+
+    uvm_tlm_analysis_fifo #(my_transaction) agt_mdl_fifo;
 
     function new(string name = "my_env", uvm_component parent);
         super.new(name, parent);
@@ -27,7 +30,34 @@ class my_env extends uvm_env;
         o_agt = my_agent::type_id::create("o_agt", this);
         i_agt.is_active = UVM_ACTIVE;
         o_agt.is_active = UVM_PASSIVE;
+
+        // 實例化 model
+        mdl = my_model::type_id::create("mdl", this);
+
+        // 在 my_monitor 和 my_model 中定義並實現了各自的埠之後
+        // 使用 fifo 將兩個接口連在一起
+
+
+        // 為什麼這裡需要一個fifo呢？
+        // 不能直接把my_monitor中的analysis_port和my_model中的blocking_get_port相連嗎？
+        // 由於analysis_port是非阻塞性質的，ap.write函式呼叫完成後馬上返回，不會等待資料被接收。
+        // 假如當write函式呼叫時，blocking_get_port正在忙於其他事情，而沒有準備好接收新的資料時，
+        // 此時被write函數寫入的my_transaction就需要一個暫存的位置，這就是fifo。
+        agt_mdl_fifo = new("agt_mdl_fifo", this);
     endfunction
+
+    extern virtual function void connect_phase(uvm_phase phase);
 
     `uvm_component_utils(my_env)
 endclass
+
+
+// connect_phase 在build_phase執行完成之後馬上執行。
+// 但是與build_phase不同的是，它的執行順序並不是從樹根到樹葉，
+// 而是從樹葉到樹根——先執行driver和monitor的connect_phase，
+// 再執行agent的connect_phase，最後執行env的connect_phase。
+function void my_env::connect_phase(uvm_phase phase);
+   super.connect_phase(phase);
+   i_agt.ap.connect(agt_mdl_fifo.analysis_export);
+   mdl.port.connect(agt_mdl_fifo.blocking_get_export);
+endfunction

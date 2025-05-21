@@ -29,6 +29,7 @@ class my_transaction extends uvm_sequence_item;
     endfunction
 
     extern function void my_print();
+    extern function void my_copy(my_transaction tr);
 endclass
 
 function void my_print();
@@ -39,4 +40,17 @@ function void my_print();
         $display("pload[%0d] = %0h", i, pload[i]);
     end
     $display("crc = %0h", crc);
+endfunction
+
+function void my_copy(my_transaction tr);
+    if(tr == null)
+        `uvm_fatal("my_transaction", "tr is null!!!!")
+    dmac = tr.dmac;
+    smac = tr.smac;
+    ether_type = tr.ether_type;
+    pload = new[tr.pload.size()];
+    for(int i = 0; i < pload.size(); i++) begin
+        pload[i] = tr.pload[i];
+    end
+    crc = tr.crc;
 endfunction
