@@ -11,6 +11,12 @@ class my_env extends uvm_env;
 
     uvm_tlm_analysis_fifo #(my_transaction) agt_mdl_fifo;
 
+    my_scoreboard scb;
+   
+    uvm_tlm_analysis_fifo #(my_transaction) agt_scb_fifo;
+    uvm_tlm_analysis_fifo #(my_transaction) agt_mdl_fifo;
+    uvm_tlm_analysis_fifo #(my_transaction) mdl_scb_fifo;
+
     function new(string name = "my_env", uvm_component parent);
         super.new(name, parent);
     endfunction
@@ -44,6 +50,15 @@ class my_env extends uvm_env;
         // 假如當write函式呼叫時，blocking_get_port正在忙於其他事情，而沒有準備好接收新的資料時，
         // 此時被write函數寫入的my_transaction就需要一個暫存的位置，這就是fifo。
         agt_mdl_fifo = new("agt_mdl_fifo", this);
+
+        // 實例化 my_scoreboard
+        scb = my_scoreboard::type_id::create("scb", this);
+
+        // 建立 agent 跟 scoreboard 之間的 FIFO
+        agt_scb_fifo = new("agt_scb_fifo", this);
+
+        // 建立 model 跟 scoreboard 之間的 FIFO
+        mdl_scb_fifo = new("mdl_scb_fifo", this);
     endfunction
 
     extern virtual function void connect_phase(uvm_phase phase);
@@ -60,4 +75,14 @@ function void my_env::connect_phase(uvm_phase phase);
    super.connect_phase(phase);
    i_agt.ap.connect(agt_mdl_fifo.analysis_export);
    mdl.port.connect(agt_mdl_fifo.blocking_get_export);
+
+   // 將 model.ap 跟 mdl_scb_fifo 串接
+   mdl.ap.connect(mdl_scb_fifo.analysis_export);
+   // 將 scb.exp_port 跟 mdl_scb_fifo 串接
+   scb.exp_port.connect(mdl_scb_fifo.blocking_get_export);
+
+   // 將 o_agt.ap 跟 agt_scb_fifo 串接
+   o_agt.ap.connect(agt_scb_fifo.analysis_export);
+   // 將 scb.act_port 跟 agt_scb_fifo 串接
+   scb.act_port.connect(agt_scb_fifo.blocking_get_export); 
 endfunction
