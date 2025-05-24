@@ -1,4 +1,4 @@
-class my_driver extends uvm_driver;
+class my_driver extends uvm_driver#(my_transaction); // 由於是從 sequencer 那邊接收 transaction 所以需要改成接收 my_transaction
     virtual my_if vif;
     virtual my_if vif2;
 
@@ -28,9 +28,6 @@ endclass
 
 
 task my_driver::main_phase(uvm_phase phase);
-    my_transaction tr;
-
-    phase.raise_objection(this);    // Objection raise 機制 
     `uvm_info("my_driver", "main_phase is called", UVM_LOW);
     vif.data <= 8'b0;
     vif.valid <= 1'b0;
