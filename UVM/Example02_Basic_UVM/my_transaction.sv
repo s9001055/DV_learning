@@ -28,6 +28,19 @@ class my_transaction extends uvm_sequence_item;
         super.new(name);
     endfunction
 
+    // field_automation 機制
+    // 經由 field_automation，把 print、copy、compare 交由 UVM 實作
+    // 就可以不用自己實作這三個 function
+    // .compare(tr)、.copy(tr)、.print()
+    `uvm_object_utils_begin(my_transaction)
+      `uvm_field_int(dmac, UVM_ALL_ON)
+      `uvm_field_int(smac, UVM_ALL_ON)
+      `uvm_field_int(ether_type, UVM_ALL_ON)
+      `uvm_field_array_int(pload, UVM_ALL_ON)
+      `uvm_field_int(crc, UVM_ALL_ON)
+    `uvm_object_utils_end
+
+
     extern function void my_print();
     extern function void my_copy(my_transaction tr);
     extern function bit my_compare(my_transaction tr);
