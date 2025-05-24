@@ -21,7 +21,12 @@ endclass
 
 function void my_agent::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   if (is_active == UVM_ACTIVE) begin
+
+   // UVM_PASSIVE和UVM_ACTIVE。
+   // 1. 在uvm_agent中，is_active的值默認為UVM_ACTIVE，在這種模式下，是需要產生實體driver
+   // 2. UVM_PASSIVE使用在輸出埠上不需要驅動任何信號，只需要監測信號
+   //    在這種情況下，埠上是只需要monitor的，所以driver可以不用產生實體
+   if (is_active == UVM_ACTIVE) begin     // 根據 is_active 來決定是否創建 driver 的實例
       sqr = my_sequencer::type_id::create("sqr", this);
       drv = my_driver::type_id::create("drv", this);
    end
@@ -33,6 +38,10 @@ function void my_agent::connect_phase(uvm_phase phase);
    if (is_active == UVM_ACTIVE) begin
       drv.seq_item_port.connect(sqr.seq_item_export);
    end
+   
+   // 根據connect_phase的執行順序，
+   // my_agent的connect_phase的執行順序早於my_env的connect_phase的執行順序，
+   // 從而可以保證執行到i_agt.ap.connect語句時，i_agt.ap不是一個空指標。
    ap = mon.ap;
 endfunction
 

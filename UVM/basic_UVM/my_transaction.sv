@@ -22,6 +22,11 @@ class my_transaction extends uvm_sequence_item;
       crc = calc_crc;
    endfunction
 
+
+   // field_automation 機制
+   // 經由 field_automation，把 print、copy、compare 交由 UVM 實作
+   // 就可以不用自己實作這三個 function
+   // .compare(tr)、.copy(tr)、.print()
    `uvm_object_utils_begin(my_transaction)
       `uvm_field_int(dmac, UVM_ALL_ON)
       `uvm_field_int(smac, UVM_ALL_ON)

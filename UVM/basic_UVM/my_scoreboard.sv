@@ -1,8 +1,15 @@
 `ifndef MY_SCOREBOARD__SV
 `define MY_SCOREBOARD__SV
+
+// my_scoreboard要比較的資料 一是來源於reference model，二是來源於o_agt的monitor。
+// 前者通過exp_port獲取，而後者通過act_port獲取。
 class my_scoreboard extends uvm_scoreboard;
    my_transaction  expect_queue[$];
+
+   // 與 reference model 串接
    uvm_blocking_get_port #(my_transaction)  exp_port;
+
+   // 與 o_agt 的 monitor 串接
    uvm_blocking_get_port #(my_transaction)  act_port;
    `uvm_component_utils(my_scoreboard)
 
@@ -26,11 +33,19 @@ task my_scoreboard::main_phase(uvm_phase phase);
    bit result;
  
    super.main_phase(phase);
+
+   // 在main_phase中通過fork建立起了兩個進程
    fork 
+      // thread 0
+      // exp_port的資料，當收到資料後，把資料放入expect_queue中
       while (1) begin
          exp_port.get(get_expect);
          expect_queue.push_back(get_expect);
       end
+
+      // thread 1
+      // 處理act_port的資料，這是DUT的輸出資料
+      // 當收集到這些資料後，從expect_queue中彈出之前從exp_port收到的資料，並調用my_transaction的my_compare函數
       while (1) begin
          act_port.get(get_actual);
          if(expect_queue.size() > 0) begin

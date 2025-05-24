@@ -3,7 +3,10 @@
 
 class my_model extends uvm_component;
    
+   // 使用 uvm_blocking_get_port 來接收數據
    uvm_blocking_get_port #(my_transaction)  port;
+
+   // 使用 uvm_analysis_port 來發送數據給 monitor
    uvm_analysis_port #(my_transaction)  ap;
 
    extern function new(string name, uvm_component parent);
@@ -28,6 +31,7 @@ task my_model::main_phase(uvm_phase phase);
    my_transaction new_tr;
    super.main_phase(phase);
    while(1) begin
+      // 通過 port.get 來得到從 i_agt 的 monitor 中發出的 transaction
       port.get(tr);
       new_tr = new("new_tr");
       new_tr.copy(tr);

@@ -15,6 +15,8 @@ class my_monitor extends uvm_monitor;
       super.build_phase(phase);
       if(!uvm_config_db#(virtual my_if)::get(this, "", "vif", vif))
          `uvm_fatal("my_monitor", "virtual interface must be set for vif!!!")
+
+      // 實例化 uvm_analysis_port
       ap = new("ap", this);
    endfunction
 
@@ -27,6 +29,8 @@ task my_monitor::main_phase(uvm_phase phase);
    while(1) begin
       tr = new("tr");
       collect_one_pkt(tr);
+      // 當收集完一個 transaction 後，需要將其寫入 ap 中
+      // .write() 為 uvm_analysis_port 的內建函數
       ap.write(tr);
    end
 endtask
