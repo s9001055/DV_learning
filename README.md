@@ -22,3 +22,11 @@ DV 學習資源
 
 7. VLSI Verify
    https://vlsiverify.com/
+
+Verilog
+
+1. Verilog 影片教學
+   https://www.bilibili.com/video/BV12y4y1v7V3/?p=6&share_source=copy_web&vd_source=535c0f77063dce48b6518660085237e1
+
+2. Verilog 程式練習 (HDLBits)
+   https://hdlbits.01xz.net/wiki/Main_Page
