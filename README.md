@@ -35,4 +35,7 @@ Verilog 學習資源
 2. Verilog 程式練習 (HDLBits)
    https://hdlbits.01xz.net/wiki/Main_Page
 
+3. ICLAB
+   https://github.com/kevin861222/NYCU-ICLAB-2024-Spring
+
 
