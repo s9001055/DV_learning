@@ -11,17 +11,14 @@ DV 學習資源
 3. SystemVerilog, UVM, DV 介紹基礎
    https://github.com/obugss/ebook
 
-4. Verilog 教學練習網站
-   https://chipdev.io/
+4. UVM 教學影片
+   https://www.bilibili.com/video/BV1QE411Z7XF/?spm_id_from=333.337.search-card.all.click&vd_source=fa4d7295f3c6c1f6fdc246c7d1a58e21
 
 5. SystemVerilog 教學練習網站
    https://www.chipverify.com/
 
 6. Online SystemVerilog compiler
    https://edaplayground.com/home
-
-7. VLSI Verify
-   https://vlsiverify.com/
 
 AMBA
 
@@ -35,7 +32,13 @@ Verilog 學習資源
 2. Verilog 程式練習 (HDLBits)
    https://hdlbits.01xz.net/wiki/Main_Page
 
-3. ICLAB
+3. Verilog 教學練習網站
+   https://chipdev.io/
+
+4. ICLAB
    https://github.com/kevin861222/NYCU-ICLAB-2024-Spring
+
+5. VLSI Verify
+   https://vlsiverify.com/
 
 
