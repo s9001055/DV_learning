@@ -24,6 +24,6 @@
               1. PRDATA 必須保持數據
                 SVA Code:
                     property p_prdata_keep_when_penable_high;
-                        @(posedge clk) penable && !pwrite && pready |-> !isstable(prdata);
+                        @(posedge clk) penable && !pwrite && pready |-> !$stable(prdata);
                     endproperty
                     assert property(p_prdata_keep_when_penable_high) else `uvm_error("ASSERT", PRDATA not keep when PENABLE HIGH)
