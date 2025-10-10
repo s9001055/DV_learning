@@ -1,0 +1,49 @@
+# ============================
+# QuestaSim / ModelSim Ignore
+# ============================
+
+# Simulation output directories
+/work/
+/vsim.wlf
+/vsim.dbg
+/transcript
+/vsim_stacktrace.vstf
+/vsim_saif.dbg
+/vsim.dbg
+/vsim.opt
+
+# Waveform / dump files
+*.wlf
+*.vcd
+*.fsdb
+*.ghw
+*.trn
+*.ucdb
+
+# Coverage & logs
+*.cov
+*.ucdb
+*.log
+*.jou
+*.pb
+*.err
+*.rpt
+
+# Temporary or build artifacts
+*.bak
+*.tmp
+*.swp
+*.swo
+*.dll
+*.so
+*.out
+*.o
+*.exe
+*.map
+*.dmp
+*.dat
+
+# Compilation database
+compile.db
+modelsim.ini
+ini/
