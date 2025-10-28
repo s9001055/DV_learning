@@ -4,4 +4,4 @@
 
 # Architecture
 
-![alt text](/image/apb_arch.png)
+![alt text](./image/apb_arch.png)
