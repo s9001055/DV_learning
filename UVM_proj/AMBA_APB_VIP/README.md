@@ -1,6 +1,6 @@
 # AMBA APB
 
-## VIP for APB Protocol
+#### VIP for APB Protocol
 
 # Architecture
 
