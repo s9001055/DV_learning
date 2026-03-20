@@ -25,7 +25,7 @@ module eight_bit_alu #(
 
     // 正緣觸發邏輯
     always @(posedge clk or negedge rst_n) begin
-      if (rst_n) begin
+      if (!rst_n) begin
         result   <= 0;
         overflow <= 0;
       end else begin
