@@ -1,6 +1,7 @@
 `include "interface.sv"
 `include "transaction.sv"
 `include "monitor.sv"
+`include "driver.sv"
 
 module top_tb;
     parameter BITWIDTH = 8;
@@ -9,7 +10,11 @@ module top_tb;
   	logic rst_n;
   	always #5 clk = ~clk;
   
+  
+  	int repeat_count = 5;
     alu_monitor #(.WIDTH(BITWIDTH)) alu_mon;
+  	alu_driver alu_drv;
+  	mailbox #(alu_transaction) mbx;
 
     // 1. 實例化 Interface
     alu_if #(.WIDTH(BITWIDTH)) dut_if(
@@ -27,60 +32,36 @@ module top_tb;
       .result	(dut_if.dut_port.result),
       .overflow	(dut_if.dut_port.overflow)
     );
-
-  	// 初始為重置狀態
-  	initial begin
-        rst_n = 0;  
-      	rst_n = 1; 
-    end
   
     // 3. 簡單的測試邏輯
     initial begin
+      	mbx = new();
         alu_mon = new(dut_if);
+      	alu_drv = new(dut_if, mbx); 
 
         fork
           alu_mon.run();
+          alu_drv.run();
         join_none
 
-        // 範例： 127 + 1 (有號數溢位測試)
-        dut_if.op = 0;
-        dut_if.a  = 8'd127; 
-        dut_if.b  = 8'd1;
-		
-		    @(posedge clk);
-        #1;
-      	$display("A: %d, B: %d, Op: %b | Result: %d, Overflow: %b, time: %t", 
-                 $signed(dut_if.a), $signed(dut_if.b), dut_if.op, 
-                 $signed(dut_if.result), dut_if.overflow, $time);
-		
-      	#20;
-      
-        // 範例： reset
-      	rst_n = 0;
-      	@(posedge clk);
-      	#1;
-        $display("A: %d, B: %d, Op: %b | Result: %d, Overflow: %b, time: %t", 
-                 $signed(dut_if.a), $signed(dut_if.b), dut_if.op, 
-                 $signed(dut_if.result), dut_if.overflow, $time);
-      	
-      	#20;
+      	rst_n = 0; 
+      	#10;
       	rst_n = 1;
-
-       	
       
-        // 範例： -128 - 1 (有號數溢位測試)
-        dut_if.op = 1;
-        dut_if.a  = 8'b1000_0000; // -128
-        dut_if.b  = 8'd1;
       
-		    @(posedge clk);
-      	#1;	
-      	$display("A: %d, B: %d, Op: %b | Result: %d, Overflow: %b, time: %t", 
-                 $signed(dut_if.a), $signed(dut_if.b), dut_if.op, 
-                 $signed(dut_if.result), dut_if.overflow, $time);
+      	repeat(repeat_count) begin
+          	alu_transaction #(.WIDTH(BITWIDTH)) tx;
+          	tx = new();
+          	
+          	// 隨機產生一些資料 (或是手動指定)
+          	tx.a = $urandom_range(8'h7F, 8'h80);
+            tx.b = $urandom_range(8'h7F, 8'h80);
+            tx.op = $urandom_range(0, 1);
+            
+            mbx.put(tx); // 丟進信箱，Driver 會自己去領
+      	end
       
-       	#30;
+       	#60;
         $finish;
-
     end
 endmodule
