@@ -54,8 +54,8 @@ module top_tb;
           	tx = new();
           	
           	// 隨機產生一些資料 (或是手動指定)
-          	tx.a = $urandom_range(8'h7F, 8'h80);
-            tx.b = $urandom_range(8'h7F, 8'h80);
+          	tx.a = $urandom_range(8'h80, 8'h0);
+            tx.b = $urandom_range(8'h80, 8'h0);
             tx.op = $urandom_range(0, 1);
             
             mbx.put(tx); // 丟進信箱，Driver 會自己去領
