@@ -16,8 +16,8 @@ class alu_driver;
             mbx.get(tr);
             
             // 2. 驅動到介面上
-            @(posedge v_if.clk);
-            #1; // 模擬 Hold time
+          @(posedge v_if.clk);
+            //#1; // 模擬 Hold time
             v_if.a  <= tr.a;
             v_if.b  <= tr.b;
             v_if.op <= tr.op;

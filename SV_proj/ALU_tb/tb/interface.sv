@@ -9,15 +9,13 @@ interface alu_if #(parameter WIDTH = 8) (
     logic [WIDTH-1:0] result;
     logic             overflow;
   
-    clocking mon_cb @(posedge clk);
+    clocking out_mon_cb @(posedge clk);
         // default input #1ns 代表在時鐘上升緣之後 1ns 才採樣 (避開競爭)
         // default output #1ns 代表在時鐘上升緣之後 1ns 才把資料送出 (模擬 Hold time)
-        default input #1ns output #1ns;
+         default input #1step;
 
         // 從 mon 角度看：a, b, op 是「輸入」
-        input a, b, op;
-
-      	output  result, overflow;
+      	input  result, overflow;
     endclocking  
   
      // 2. 定義 Modport (規範方向)

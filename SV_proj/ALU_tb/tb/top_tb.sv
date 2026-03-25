@@ -1,7 +1,9 @@
 `include "interface.sv"
 `include "transaction.sv"
-`include "monitor.sv"
+`include "in_monitor.sv"
+`include "out_monitor.sv"
 `include "driver.sv"
+`include "ref_model.sv"
 
 module top_tb;
     parameter BITWIDTH = 8;
@@ -12,9 +14,15 @@ module top_tb;
   
   
   	int repeat_count = 5;
-    alu_monitor #(.WIDTH(BITWIDTH)) alu_mon;
+  	alu_in_monitor #(.WIDTH(BITWIDTH)) alu_in_mon;
+    alu_out_monitor #(.WIDTH(BITWIDTH)) alu_out_mon;
+  alu_ref_model #(.WIDTH(BITWIDTH)) alu_ref_model;
   	alu_driver alu_drv;
-  	mailbox #(alu_transaction) mbx;
+  
+  	
+  	mailbox #(alu_transaction) drv_mbx;
+  	mailbox #(alu_transaction) in_mon_ref_mbx;
+  mailbox #(alu_transaction) ref_scb_mbx;
 
     // 1. 實例化 Interface
     alu_if #(.WIDTH(BITWIDTH)) dut_if(
@@ -35,17 +43,26 @@ module top_tb;
   
     // 3. 簡單的測試邏輯
     initial begin
-      	mbx = new();
-        alu_mon = new(dut_if);
-      	alu_drv = new(dut_if, mbx); 
+     $dumpvars;
+      
+      drv_mbx = new();
+      in_mon_ref_mbx = new();
+      ref_scb_mbx = new();
+      
+      alu_in_mon = new(dut_if, in_mon_ref_mbx);
+      alu_out_mon = new(dut_if);
+      alu_drv = new(dut_if, drv_mbx); 
+      alu_ref_model = new(in_mon_ref_mbx, ref_scb_mbx);
 
         fork
-          alu_mon.run();
+          alu_in_mon.run();
+          alu_out_mon.run();
           alu_drv.run();
+          alu_ref_model.run();
         join_none
 
       	rst_n = 0; 
-      	#10;
+      	#1;
       	rst_n = 1;
       
       
@@ -54,14 +71,15 @@ module top_tb;
           	tx = new();
           	
           	// 隨機產生一些資料 (或是手動指定)
-          	tx.a = $urandom_range(8'h80, 8'h0);
+            tx.a = $urandom_range(8'h80, 8'h0);
             tx.b = $urandom_range(8'h80, 8'h0);
             tx.op = $urandom_range(0, 1);
             
-            mbx.put(tx); // 丟進信箱，Driver 會自己去領
+            drv_mbx.put(tx); // 丟進信箱，Driver 會自己去領
       	end
       
        	#60;
+      $dumpvars;
         $finish;
     end
 endmodule
