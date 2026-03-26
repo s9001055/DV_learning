@@ -1,3 +1,5 @@
+`include "rtl\eight_bit_alu.v"
+
 `include "interface.sv"
 `include "transaction.sv"
 `include "in_monitor.sv"
