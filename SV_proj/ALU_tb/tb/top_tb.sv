@@ -86,6 +86,7 @@ module top_tb;
       	 
         #100;
         $dumpvars;
+        alu_scb.report();
         $finish;
     end
 endmodule
