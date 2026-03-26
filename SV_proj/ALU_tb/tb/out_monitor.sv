@@ -8,8 +8,8 @@ class alu_out_monitor #(parameter WIDTH = 8);
   	
     // 建構子：把實體介面傳進來
     function new(virtual alu_if if_in, mailbox #(alu_transaction) mbx_out);
-          this.v_if = if_in;
-          this.mbx = mbx_out;
+        this.v_if = if_in;
+        this.mbx = mbx_out;
     endfunction
 
     // 啟動監控的任務

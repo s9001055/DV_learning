@@ -3,20 +3,20 @@ class alu_in_monitor #(parameter WIDTH = 8);
     virtual alu_if v_if;
   	mailbox #(alu_transaction) mbx; // 要傳給 ref model 的 mailbox
   
-	bit first = 1;
+	  bit first = 1;
     
     // 建構子：把實體介面傳進來
   	function new(virtual alu_if if_in, mailbox #(alu_transaction) mbx_out);
         this.v_if = if_in;
-    	this.mbx = mbx_out;
+    	  this.mbx = mbx_out;
     endfunction
 
     // 啟動監控的任務
     task run();
-      $display("[%0t] [IN_Monitor] Class-based monitor started.", $time);
+        $display("[%0t] [IN_Monitor] Class-based monitor started.", $time);
         forever begin
             // 1. 等待時鐘正緣
-          @(posedge v_if.clk);
+            @(posedge v_if.clk);
             
             // 2. 只有在重置釋放時才採樣
             if (v_if.rst_n) begin
