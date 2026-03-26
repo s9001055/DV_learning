@@ -13,28 +13,29 @@ class alu_ref_model #(parameter WIDTH = 8);
   
   task run();
      forever begin
-         alu_transaction tr;
-			
-         alu_transaction #(.WIDTH(WIDTH)) out_tr;
-         out_tr = new();
-       
-         // 1. 從信箱拿資料 (如果信箱是空的，這行會擋住直到有資料進來)
-         mbx_mon.get(tr);
-         if (tr.op == 0) begin
-           result = tr.a + tr.b;
-           overflow = (~(tr.a ^ tr.b) & (tr.a ^ result)) & (1 << (WIDTH - 1));
-         end
-       	 else if (tr.op == 1) begin
-           result = tr.a - tr.b;
-           overflow = ((tr.a ^ tr.b) & (tr.a ^ result)) & (1 << (WIDTH - 1));
-         end
-       	 
+        alu_transaction tr;
 
-       	 
-       	 out_tr.result = result;
-         out_tr.overflow = overflow;
+        alu_transaction #(.WIDTH(WIDTH)) out_tr;
+        out_tr = new();
 
-       $display("[REF_MODEL] MODEL A:%d B:%d Op:%b | result:%d overflow:%d ", $signed(tr.a), $signed(tr.b), tr.op, $signed(out_tr.result), out_tr.overflow);
+        // 1. 從信箱拿資料 (如果信箱是空的，這行會擋住直到有資料進來)
+        mbx_mon.get(tr);
+        if (tr.op == 0) begin
+            result = tr.a + tr.b;
+            overflow = ( ((~(tr.a ^ tr.b) & (tr.a ^ result)) & (1 << (WIDTH - 1))) >> (WIDTH - 1) );
+        end
+        else if (tr.op == 1) begin
+            result = tr.a - tr.b;
+            overflow = ( (((tr.a ^ tr.b) & (tr.a ^ result)) & (1 << (WIDTH - 1))) >> (WIDTH - 1) );
+        end
+
+        out_tr.a = tr.a;
+        out_tr.b = tr.b;
+        out_tr.op = tr.op;
+        out_tr.result = result;
+        out_tr.overflow = overflow;
+        mbx_scb.put(out_tr);
+        //        $display("[REF_MODEL] MODEL A:%d B:%d Op:%b | result:%d overflow:%d ", $signed(tr.a), $signed(tr.b), tr.op, $signed(out_tr.result), out_tr.overflow);
      end
   endtask
   

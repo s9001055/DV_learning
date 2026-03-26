@@ -4,6 +4,7 @@
 `include "out_monitor.sv"
 `include "driver.sv"
 `include "ref_model.sv"
+`include "scoreboard.sv"
 
 module top_tb;
     parameter BITWIDTH = 8;
@@ -16,13 +17,15 @@ module top_tb;
   	int repeat_count = 5;
   	alu_in_monitor #(.WIDTH(BITWIDTH)) alu_in_mon;
     alu_out_monitor #(.WIDTH(BITWIDTH)) alu_out_mon;
-  alu_ref_model #(.WIDTH(BITWIDTH)) alu_ref_model;
+  	alu_ref_model #(.WIDTH(BITWIDTH)) alu_ref_model;
+    alu_scoreboard #(.WIDTH(BITWIDTH)) alu_scb;
   	alu_driver alu_drv;
   
   	
   	mailbox #(alu_transaction) drv_mbx;
   	mailbox #(alu_transaction) in_mon_ref_mbx;
-  mailbox #(alu_transaction) ref_scb_mbx;
+  	mailbox #(alu_transaction) out_mon_scb_mbx;
+  	mailbox #(alu_transaction) ref_scb_mbx;
 
     // 1. 實例化 Interface
     alu_if #(.WIDTH(BITWIDTH)) dut_if(
@@ -43,22 +46,25 @@ module top_tb;
   
     // 3. 簡單的測試邏輯
     initial begin
-     $dumpvars;
-      
-      drv_mbx = new();
-      in_mon_ref_mbx = new();
-      ref_scb_mbx = new();
-      
-      alu_in_mon = new(dut_if, in_mon_ref_mbx);
-      alu_out_mon = new(dut_if);
-      alu_drv = new(dut_if, drv_mbx); 
-      alu_ref_model = new(in_mon_ref_mbx, ref_scb_mbx);
+        $dumpvars;
+        
+        drv_mbx = new();
+        in_mon_ref_mbx = new();
+        out_mon_scb_mbx = new();
+        ref_scb_mbx = new();
+        
+        alu_in_mon = new(dut_if, in_mon_ref_mbx);
+        alu_out_mon = new(dut_if, out_mon_scb_mbx);
+        alu_drv = new(dut_if, drv_mbx); 
+        alu_ref_model = new(in_mon_ref_mbx, ref_scb_mbx);
+        alu_scb = new(ref_scb_mbx, out_mon_scb_mbx);
 
         fork
           alu_in_mon.run();
           alu_out_mon.run();
           alu_drv.run();
           alu_ref_model.run();
+          alu_scb.run();
         join_none
 
       	rst_n = 0; 
@@ -77,9 +83,9 @@ module top_tb;
             
             drv_mbx.put(tx); // 丟進信箱，Driver 會自己去領
       	end
-      
-       	#60;
-      $dumpvars;
+      	 
+        #100;
+        $dumpvars;
         $finish;
     end
 endmodule
