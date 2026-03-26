@@ -7,6 +7,7 @@
 `include "driver.sv"
 `include "ref_model.sv"
 `include "scoreboard.sv"
+`include "generator.sv"
 
 module top_tb;
     parameter BITWIDTH = 8;
@@ -39,7 +40,8 @@ module top_tb;
     alu_out_monitor #(.WIDTH(BITWIDTH)) alu_out_mon;
   	alu_ref_model   #(.WIDTH(BITWIDTH)) alu_ref_model;
     alu_scoreboard  #(.WIDTH(BITWIDTH)) alu_scb;
-  	alu_driver alu_drv;
+    alu_generator   #(.WIDTH(BITWIDTH))alu_gen;
+    alu_driver alu_drv;
   
   	// 宣告各 component 需要用到的 mailbox
   	mailbox #(alu_transaction) drv_mbx;
@@ -61,8 +63,14 @@ module top_tb;
         alu_in_mon = new(dut_if, in_mon_ref_mbx);
         alu_out_mon = new(dut_if, out_mon_scb_mbx);
         alu_drv = new(dut_if, drv_mbx); 
+        alu_gen = new(drv_mbx, repeat_count);
         alu_ref_model = new(in_mon_ref_mbx, ref_scb_mbx);
         alu_scb = new(ref_scb_mbx, out_mon_scb_mbx);
+
+        // reset
+      	rst_n = 0; 
+      	#1;
+      	rst_n = 1;
 
         // 各 component 開始運作
         fork
@@ -71,25 +79,23 @@ module top_tb;
           alu_drv.run();
           alu_ref_model.run();
           alu_scb.run();
+          alu_gen.run();
         join_none
 
-        // reset
-      	rst_n = 0; 
-      	#1;
-      	rst_n = 1;
-      
-      	repeat(repeat_count) begin
-          	alu_transaction #(.WIDTH(BITWIDTH)) tx;
-          	tx = new();
-          	
-          	// 隨機產生一些資料 (或是手動指定)
-            tx.a = $urandom_range(8'h80, 8'h0);
-            tx.b = $urandom_range(8'h80, 8'h0);
-            tx.op = $urandom_range(0, 1);
 
-            // 丟進信箱，Driver 會自己去領
-            drv_mbx.put(tx); 
-      	end
+      
+      	// repeat(repeat_count) begin
+        //   	alu_transaction #(.WIDTH(BITWIDTH)) tx;
+        //   	tx = new();
+          	
+        //   	// 隨機產生一些資料 (或是手動指定)
+        //     tx.a = $urandom_range(8'h80, 8'h0);
+        //     tx.b = $urandom_range(8'h80, 8'h0);
+        //     tx.op = $urandom_range(0, 1);
+
+        //     // 丟進信箱，Driver 會自己去領
+        //     drv_mbx.put(tx); 
+      	// end
       	 
         #100;
         //$dumpvars; // for edaplayground waveform
