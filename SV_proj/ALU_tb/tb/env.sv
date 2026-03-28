@@ -10,6 +10,9 @@ class alu_env #(parameter WIDTH = 8);
     alu_scoreboard  #(.WIDTH(WIDTH)) alu_scb;
     alu_generator   #(.WIDTH(WIDTH)) alu_gen;
     alu_driver 		#(.WIDTH(WIDTH)) alu_drv;
+
+    // 宣告 Coverage 
+  	alu_coverage #(.WIDTH(WIDTH)) alu_cov;
   
   	// 宣告各 component 需要用到的 mailbox
   	mailbox #(alu_transaction) drv_mbx;
@@ -27,13 +30,16 @@ class alu_env #(parameter WIDTH = 8);
         out_mon_scb_mbx = new();
         ref_scb_mbx 	= new();
         
+        // 實例化 cov
+        alu_cov			= new();
+
         // 實例化各 component
         alu_in_mon 		= new(v_if, in_mon_ref_mbx);
         alu_out_mon 	= new(v_if, out_mon_scb_mbx);
       	alu_drv 		= new(v_if, drv_mbx); 
         alu_gen 		= new(drv_mbx, repeat_count);
         alu_ref_model 	= new(in_mon_ref_mbx, ref_scb_mbx);
-        alu_scb 		= new(ref_scb_mbx, out_mon_scb_mbx);
+        alu_scb 		= new(ref_scb_mbx, out_mon_scb_mbx, alu_cov);
     endfunction
 
     task run();

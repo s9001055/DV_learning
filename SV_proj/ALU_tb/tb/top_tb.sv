@@ -2,6 +2,7 @@
 
 `include "interface.sv"
 `include "transaction.sv"
+`include "coverage.sv"
 `include "in_monitor.sv"
 `include "out_monitor.sv"
 `include "driver.sv"
@@ -58,6 +59,8 @@ module top_tb;
 
         // 印出結果
         alu_env.report();
+        // 印出目前 alu_cg 的覆蓋率
+        $display("Final Coverage = %0.2f %%", alu_env.alu_cov.alu_cg.get_inst_coverage());
         $finish;
     end
 endmodule

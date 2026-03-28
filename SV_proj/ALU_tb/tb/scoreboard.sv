@@ -2,17 +2,25 @@ class alu_scoreboard #(parameter WIDTH = 8);
     mailbox #(alu_transaction) ref_mbx; // 收 ref model 的 mailbox
     mailbox #(alu_transaction) o_mon_mbx; // 收 out monitor 的 mailbox
     
+    // 宣告 Coverage 
+    alu_coverage #(WIDTH) cov;
+
     // 統計成功與失敗的次數
     int pass_count = 0;
     int fail_count = 0;  
   
     // 建構子：把實體介面傳進來
-  	function new(mailbox #(alu_transaction) ref_mbx, mailbox #(alu_transaction) o_mon_mbx);
+  	function new(mailbox #(alu_transaction) ref_mbx, mailbox #(alu_transaction) o_mon_mbx, alu_coverage cov);
     	this.ref_mbx = ref_mbx;
       	this.o_mon_mbx = o_mon_mbx;
+        this.cov = cov;
     endfunction
   
     task run();
+        // for coverage use
+        alu_transaction #(WIDTH) cov_tr;
+        cov_tr = new();
+
         alu_transaction #(WIDTH) tr_ref, tr_mon;
         $display("[%0t] [Scoreboard] Scoreboard started.", $time);
             
@@ -26,6 +34,14 @@ class alu_scoreboard #(parameter WIDTH = 8);
                 $display("[%0t] [Scoreboard] PASS! A:%d B:%d Op:%b | Result:%d (Expected:%d) overflow:%d (Expected:%d)", 
                         $time, $signed(tr_ref.a), $signed(tr_ref.b), tr_ref.op, 
                         $signed(tr_mon.result), $signed(tr_ref.result), tr_mon.overflow, tr_ref.overflow);
+
+                // 送給tr給cov統計coverage
+                cov_tr.a = tr_ref.a;
+                cov_tr.b = tr_ref.b;
+                cov_tr.op = tr_ref.op;
+                cov_tr.result = tr_ref.result;
+                cov_tr.overflow = tr_ref.overflow;
+                cov.sample(cov_tr);
             end else begin
                 fail_count++;
                 $display("[%0t] [Scoreboard] ERROR!!! MISMATCH!", $time);
