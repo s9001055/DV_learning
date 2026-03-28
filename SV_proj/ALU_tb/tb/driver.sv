@@ -1,4 +1,4 @@
-class alu_driver;
+class alu_driver #(parameter WIDTH = 8);
     virtual alu_if v_if;
     mailbox #(alu_transaction) mbx; // 定義存放 Transaction 的信箱
 
@@ -16,13 +16,13 @@ class alu_driver;
             mbx.get(tr);
             
             // 2. 驅動到介面上
-          @(posedge v_if.clk);
+            @(posedge v_if.clk);
             //#1; // 模擬 Hold time
             v_if.a  <= tr.a;
             v_if.b  <= tr.b;
             v_if.op <= tr.op;
             
-          $display("[%0t] [Driver] Drive A:%d B:%d Op:%b", $time, $signed(tr.a), $signed(tr.b), tr.op);
+            $display("[%0t] [Driver] Drive A:%d B:%d Op:%b", $time, $signed(tr.a), $signed(tr.b), tr.op);
         end
     endtask
 endclass
