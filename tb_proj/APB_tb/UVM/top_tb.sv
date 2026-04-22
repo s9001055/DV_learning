@@ -1,20 +1,18 @@
-module top_tb;
-    parameter ADDR_WIDTH = 10;
-    parameter DATA_WIDTH = 32;
-    parameter WAIT_CYCLES = 8;
+`include "apb_defines.svh"
 
+module top_tb;
   	bit clk;
   	logic rst_n;
   	always #5 clk = ~clk;
 
     // 實例化 Interface
-    apb_if #(.ADDR_WIDTH(ADDR_WIDTH)) apb_if(
+    apb_if apb_if(
       .clk		(clk),
       .rst_n	(rst_n)
     );
 
     // 實例化 ALU 並連接 Interface
-    apb_memory_slave #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH), .WAIT_CYCLES(WAIT_CYCLES)) dut (
+    apb_memory_slave #(.ADDR_WIDTH(APB_ADDR_WIDTH), .DATA_WIDTH(APB_DATA_WIDTH), .WAIT_CYCLES(APB_WAIT_CYCLES)) dut (
       .PCLK		    (clk),
       .PRESETn	    (rst_n),
       .PADDR		(apb_if.dut_port.PADDR),
