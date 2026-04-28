@@ -22,8 +22,8 @@ module top_tb;
 
     // 實例化 Interface
     apb_if apb_if(
-      .clk		(clk),
-      .rst_n	(rst_n)
+      .PCLK		(clk),
+      .PRESETn	(rst_n)
     );
 
     // 實例化 ALU 並連接 Interface
