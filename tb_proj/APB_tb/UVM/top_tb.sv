@@ -30,15 +30,15 @@ module top_tb;
     apb_memory_slave #(.ADDR_WIDTH(`APB_ADDR_WIDTH), .DATA_WIDTH(`APB_DATA_WIDTH), .WAIT_CYCLES(`APB_WAIT_CYCLES)) dut (
       .PCLK		      (clk),
       .PRESETn	    (rst_n),
-      .PADDR		    (apb_if.dut_port.PADDR),
-      .PSEL		      (apb_if.dut_port.PSEL),
-      .PENABLE	  	(apb_if.dut_port.PENABLE),
-      .PWRITE	      (apb_if.dut_port.PWRITE),
-      .PWDATA	      (apb_if.dut_port.PWDATA),
-      .PSTRB        (apb_if.dut_port.PSTRB),
-      .PRDATA       (apb_if.dut_port.PRDATA),
-      .PREADY       (apb_if.dut_port.PREADY),
-      .PSLVERR      (apb_if.dut_port.PSLVERR)
+      .PADDR		    (apb_if.PADDR),
+      .PSEL		      (apb_if.PSEL),
+      .PENABLE	  	(apb_if.PENABLE),
+      .PWRITE	      (apb_if.PWRITE),
+      .PWDATA	      (apb_if.PWDATA),
+      .PSTRB        (apb_if.PSTRB),
+      .PRDATA       (apb_if.PRDATA),
+      .PREADY       (apb_if.PREADY),
+      .PSLVERR      (apb_if.PSLVERR)
     );
 
 
