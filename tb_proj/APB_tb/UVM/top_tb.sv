@@ -1,5 +1,17 @@
 `include "apb_defines.svh"
 
+`include "apb_item.sv"
+`include "interface.sv"
+`include "apb_driver.sv"
+`include "apb_monitor.sv"
+`include "apb_scoreboard.sv"
+// `include "apb_coverage.sv"
+`include "apb_agent.sv"
+`include "apb_env.sv"
+`include "apb_sequence.sv"
+`include "base_test.sv"
+
+
 module top_tb;
   	bit clk;
   	logic rst_n;
@@ -12,7 +24,7 @@ module top_tb;
     );
 
     // 實例化 ALU 並連接 Interface
-    apb_memory_slave #(.ADDR_WIDTH(APB_ADDR_WIDTH), .DATA_WIDTH(APB_DATA_WIDTH), .WAIT_CYCLES(APB_WAIT_CYCLES)) dut (
+    apb_memory_slave #(.ADDR_WIDTH(`APB_ADDR_WIDTH), .DATA_WIDTH(`APB_DATA_WIDTH), .WAIT_CYCLES(`APB_WAIT_CYCLES)) dut (
       .PCLK		      (clk),
       .PRESETn	    (rst_n),
       .PADDR		    (apb_if.dut_port.PADDR),

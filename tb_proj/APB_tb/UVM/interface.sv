@@ -5,13 +5,13 @@ interface apb_if (
     input logic PRESETn
 );
 
-    logic [APB_DATA_WIDTH-1:0]      PADDR;
+    logic [`APB_DATA_WIDTH-1:0]      PADDR;
     logic                           PSEL;
     logic                           PENABLE;
     logic                           PWRITE;
-    logic [APB_DATA_WIDTH-1:0]      PWDATA;
-    logic [(APB_DATA_WIDTH/8)-1:0]  PSTRB;
-    logic [APB_DATA_WIDTH-1:0]      PRDATA;
+    logic [`APB_DATA_WIDTH-1:0]      PWDATA;
+    logic [(`APB_DATA_WIDTH/8)-1:0]  PSTRB;
+    logic [`APB_DATA_WIDTH-1:0]      PRDATA;
     logic                           PREADY;
     logic                           PSLVERR;
 

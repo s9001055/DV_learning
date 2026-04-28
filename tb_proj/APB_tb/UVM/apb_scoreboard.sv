@@ -7,7 +7,7 @@ class apb_scoreboard extends uvm_scoreboard;
 
     // Shadow Memory（對應 DUT 內部 mem[]）
     // Key = word address（PADDR[11:2]）
-    logic [APB_DATA_WIDTH-1:0] shadow_mem [int];
+    logic [`APB_DATA_WIDTH-1:0] shadow_mem [int];
 
     int unsigned pass_cnt, fail_cnt;
 
@@ -40,7 +40,7 @@ class apb_scoreboard extends uvm_scoreboard;
 
         end else begin
             // 讀取：比對 DUT PRDATA 與 shadow
-            logic [APB_DATA_WIDTH-1:0] expected;
+            logic [`APB_DATA_WIDTH-1:0] expected;
 
             if (shadow_mem.exists(waddr))
                 expected = shadow_mem[waddr];
