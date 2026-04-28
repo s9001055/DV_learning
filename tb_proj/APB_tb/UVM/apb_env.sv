@@ -1,3 +1,6 @@
+import uvm_pkg::*;
+`include "uvm_macros.svh"
+
 `include "apb_defines.svh"
 
 class apb_env extends uvm_env;

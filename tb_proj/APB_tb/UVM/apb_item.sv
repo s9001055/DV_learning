@@ -1,14 +1,17 @@
+import uvm_pkg::*;
+`include "uvm_macros.svh"
+
 `include "apb_defines.svh"
 
 // transation class
 class apb_item extends uvm_sequence_item;
     `uvm_object_utils(apb_item)
 
-    rand logic [APB_DATA_WIDTH-1:0]         paddr;
+    rand logic [`APB_DATA_WIDTH-1:0]         paddr;
     rand logic                              pwrite;
-    rand logic [APB_DATA_WIDTH-1:0]         pwdata;
-    rand logic [(APB_DATA_WIDTH/8)-1:0]     pstrb;
-         logic [APB_DATA_WIDTH-1:0]         prdata;   // 由 Monitor 填入，不需 rand
+    rand logic [`APB_DATA_WIDTH-1:0]         pwdata;
+    rand logic [(`APB_DATA_WIDTH/8)-1:0]     pstrb;
+         logic [`APB_DATA_WIDTH-1:0]         prdata;   // 由 Monitor 填入，不需 rand
          logic                              pslverr;
 
 
