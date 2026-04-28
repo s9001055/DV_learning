@@ -47,9 +47,9 @@ module top_tb;
     // -------------------------------------------------------------------------
     initial begin
         uvm_config_db #(virtual apb_if.master_mp)::set(
-            null, "uvm_test_top.env.agent.driver",  "vif", u_apb_if.master_mp);
+            null, "uvm_test_top.env.agent.driver",  "vif", apb_if.master_mp);
         uvm_config_db #(virtual apb_if.monitor_mp)::set(
-            null, "uvm_test_top.env.agent.monitor", "vif", u_apb_if.monitor_mp);
+            null, "uvm_test_top.env.agent.monitor", "vif", apb_if.monitor_mp);
 
         // 啟動 UVM（透過 +UVM_TESTNAME 指定 test class）
         // run_test() 內部會自己去讀 +UVM_TESTNAME
