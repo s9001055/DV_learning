@@ -6,7 +6,7 @@ class apb_monitor extends uvm_monitor;
     virtual apb_if.monitor_mp vif;
 
     // Analysis port：連到 Scoreboard / Coverage
-    uvm_analysis_port #(apb_seq_item) ap;
+    uvm_analysis_port #(apb_item) ap;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -20,7 +20,7 @@ class apb_monitor extends uvm_monitor;
     endfunction
 
     task run_phase(uvm_phase phase);
-        apb_seq_item tr;
+        apb_item tr;
 
         // 等待 Reset 釋放
         @(posedge vif.PCLK iff vif.PRESETn === 1'b1);
@@ -30,7 +30,7 @@ class apb_monitor extends uvm_monitor;
             // 等待 SETUP 相位（PSEL=1, PENABLE=0）
             @(vif.monitor_cb iff (vif.monitor_cb.PSEL && !vif.monitor_cb.PENABLE));
 
-            tr = apb_seq_item::type_id::create("mon_tr");
+            tr = apb_item::type_id::create("mon_tr");
             tr.paddr  = vif.monitor_cb.PADDR;
             tr.pwrite = vif.monitor_cb.PWRITE;
             tr.pwdata = vif.monitor_cb.PWDATA;

@@ -3,13 +3,13 @@
 // -----------------------------------------------------------------------------
 // Base Sequence
 // -----------------------------------------------------------------------------
-class apb_base_seq extends uvm_sequence #(apb_seq_item);
+class apb_base_seq extends uvm_sequence #(apb_item);
     `uvm_object_utils(apb_base_seq)
     function new(string name = "apb_base_seq"); super.new(name); endfunction
 
     // 便利任務：單筆寫入
     task do_write(logic [31:0] addr, logic [31:0] data, logic [3:0] strb = 4'hF);
-        apb_seq_item tr = apb_seq_item::type_id::create("wr_tr");
+        apb_item tr = apb_item::type_id::create("wr_tr");
         start_item(tr);
         if (!tr.randomize() with { paddr == addr; pwrite == 1; pwdata == data; pstrb == strb; })
             `uvm_fatal("SEQ", "Randomize failed")
@@ -18,7 +18,7 @@ class apb_base_seq extends uvm_sequence #(apb_seq_item);
 
     // 便利任務：單筆讀取
     task do_read(logic [31:0] addr);
-        apb_seq_item tr = apb_seq_item::type_id::create("rd_tr");
+        apb_item tr = apb_item::type_id::create("rd_tr");
         start_item(tr);
         if (!tr.randomize() with { paddr == addr; pwrite == 0; })
             `uvm_fatal("SEQ", "Randomize failed")

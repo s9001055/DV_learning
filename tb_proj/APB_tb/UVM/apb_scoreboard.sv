@@ -3,7 +3,7 @@
 class apb_scoreboard extends uvm_scoreboard;
     `uvm_component_utils(apb_scoreboard)
 
-    uvm_analysis_imp #(apb_seq_item, apb_scoreboard) analysis_export;
+    uvm_analysis_imp #(apb_item, apb_scoreboard) analysis_export;
 
     // Shadow Memory（對應 DUT 內部 mem[]）
     // Key = word address（PADDR[11:2]）
@@ -23,7 +23,7 @@ class apb_scoreboard extends uvm_scoreboard;
     // -------------------------------------------------------------------------
     // 每筆 transaction 進來時呼叫
     // -------------------------------------------------------------------------
-    function void write(apb_seq_item tr);
+    function void write(apb_item tr);
         int waddr = tr.paddr[11:2];  // word address
 
         if (tr.pwrite) begin

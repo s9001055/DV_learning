@@ -1,6 +1,6 @@
 `include "apb_defines.svh"
 
-class apb_driver extends uvm_driver #(apb_seq_item);
+class apb_driver extends uvm_driver #(apb_item);
     `uvm_component_utils(apb_driver)
 
     virtual apb_if.master_mp vif;
@@ -16,7 +16,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
     endfunction
 
     task run_phase(uvm_phase phase);
-        apb_seq_item req;
+        apb_item req;
 
         // 初始化匯流排為 IDLE
         drive_idle();
@@ -48,7 +48,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
     // -------------------------------------------------------------------------
     // 完整 APB 傳輸：SETUP → ACCESS (含 PREADY stall)
     // -------------------------------------------------------------------------
-    task drive_transfer(apb_seq_item req);
+    task drive_transfer(apb_item req);
         // --- SETUP Phase ---
         // 第一個 clk: 設定 PADDR, PWRITE, PWDATA, PSTRB, PSEL
         // @(vif.master_cb);

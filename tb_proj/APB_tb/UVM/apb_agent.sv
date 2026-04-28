@@ -6,10 +6,10 @@ class apb_agent extends uvm_agent;
     // Sub-components
     apb_driver    driver;
     apb_monitor   monitor;
-    uvm_sequencer #(apb_seq_item) sequencer;
+    uvm_sequencer #(apb_item) sequencer;
 
     // 轉發 Monitor 的 analysis port
-    uvm_analysis_port #(apb_seq_item) ap;
+    uvm_analysis_port #(apb_item) ap;
 
     // ACTIVE = 有 Driver；PASSIVE = 只有 Monitor
     uvm_active_passive_enum is_active = UVM_ACTIVE;
@@ -23,7 +23,7 @@ class apb_agent extends uvm_agent;
         ap      = new("ap", this);
         monitor = apb_monitor::type_id::create("monitor", this);
         if (is_active == UVM_ACTIVE) begin
-            sequencer = uvm_sequencer #(apb_seq_item)::type_id::create("sequencer", this);
+            sequencer = uvm_sequencer #(apb_item)::type_id::create("sequencer", this);
             driver    = apb_driver::type_id::create("driver", this);
         end
     endfunction
