@@ -8,7 +8,7 @@ class apb_env extends uvm_env;
 
     apb_agent       agent;
     apb_scoreboard  scoreboard;
-    apb_coverage    coverage;
+    // apb_coverage    coverage;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -18,13 +18,13 @@ class apb_env extends uvm_env;
         super.build_phase(phase);
         agent      = apb_agent::type_id::create("agent", this);
         scoreboard = apb_scoreboard::type_id::create("scoreboard", this);
-        coverage   = apb_coverage::type_id::create("coverage", this);
+        // coverage   = apb_coverage::type_id::create("coverage", this);
     endfunction
 
     function void connect_phase(uvm_phase phase);
         // Monitor → Scoreboard & Coverage
         agent.ap.connect(scoreboard.analysis_export);
-        agent.ap.connect(coverage.analysis_export);
+        // agent.ap.connect(coverage.analysis_export);
     endfunction
 
 endclass
