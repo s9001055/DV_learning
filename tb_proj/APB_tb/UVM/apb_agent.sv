@@ -32,6 +32,7 @@ class apb_agent extends uvm_agent;
     endfunction
 
     function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
         if (is_active == UVM_ACTIVE)
             driver.seq_item_port.connect(sequencer.seq_item_export);
         monitor.ap.connect(ap);

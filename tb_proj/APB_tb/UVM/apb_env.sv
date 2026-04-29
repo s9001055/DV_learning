@@ -22,6 +22,7 @@ class apb_env extends uvm_env;
     endfunction
 
     function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
         // Monitor → Scoreboard & Coverage
         agent.ap.connect(scoreboard.analysis_export);
         // agent.ap.connect(coverage.analysis_export);
