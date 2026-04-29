@@ -41,6 +41,8 @@
 ---
 
 ## 檔案階層目錄樹
+
+```
 ├── rtl/
 │   └── apb_mem.v             # 待測設計 (DUT)：參數化 APB Memory Slave
 │
@@ -61,3 +63,4 @@
     |
     |
     └── base_test.sv          # 測試案例：包含 base_test 與具體的 apb_test_wr_rd
+```
