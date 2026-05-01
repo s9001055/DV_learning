@@ -26,7 +26,7 @@ module top_tb;
       .PRESETn	(rst_n)
     );
 
-    // 實例化 ALU 並連接 Interface
+    // 實例化 DUT 並連接 Interface
     apb_memory_slave #(.ADDR_WIDTH(`APB_ADDR_WIDTH), .DATA_WIDTH(`APB_DATA_WIDTH), .WAIT_CYCLES(`APB_WAIT_CYCLES)) dut (
       .PCLK		      (clk),
       .PRESETn	    (rst_n),
