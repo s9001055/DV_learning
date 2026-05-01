@@ -1,3 +1,8 @@
+import uvm_pkg::*;
+`include "uvm_macros.svh"
+
+`include "ahb_defines.svh"
+
 // =============================================================================
 // ahb_seq_item.sv - AHB Transaction (Sequence Item)
 // =============================================================================

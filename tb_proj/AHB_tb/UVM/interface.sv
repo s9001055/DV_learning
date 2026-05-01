@@ -1,4 +1,7 @@
-`include "apb_defines.svh"
+import uvm_pkg::*;
+`include "uvm_macros.svh"
+
+`include "ahb_defines.svh"
 
 interface ahb_if (
     input logic HCLK,
