@@ -33,16 +33,16 @@ class ahb_seq_item extends uvm_sequence_item;
     // -------------------------------------------------------------------------
     // Randomizable Fields
     // -------------------------------------------------------------------------
-    rand logic [31:0] addr;
+    rand logic [`AHB_ADDR_WIDTH-1:0] addr;
     rand logic        write;
-    rand logic [31:0] data;
+    rand logic [`AHB_ADDR_WIDTH-1:0] data;
     rand hsize_e      size;
     rand hburst_e     burst;
     rand htrans_e     trans;
     rand int unsigned burst_len;  // number of beats in an INCR burst
 
     // Response (captured by monitor)
-    logic [31:0] rdata;
+    logic [`AHB_DATA_WIDTH:0] rdata;
     logic        hresp;
     logic        hready;
 
