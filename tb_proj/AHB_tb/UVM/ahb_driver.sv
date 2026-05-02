@@ -72,12 +72,12 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
     // -------------------------------------------------------------------------
     task get_item_thread;
         ahb_seq_item item;
+        int unsigned num_beats;
+        logic [`AHB_ADDR_WIDTH-1:0] cur_addr;
+        int          byte_inc;
 
         forever begin
             seq_item_port.get_next_item(item);
-            int unsigned num_beats;
-            logic [`AHB_ADDR_WIDTH-1:0] cur_addr;
-            int          byte_inc;
 
             num_beats = (item.burst == ahb_seq_item::HBURST_INCR) ?
                         item.burst_len : 1;
