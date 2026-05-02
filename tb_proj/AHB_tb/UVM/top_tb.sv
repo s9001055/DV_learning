@@ -15,9 +15,9 @@ module top_tb;
     );
 
     // 實例化 DUT 並連接 Interface
-    ahb_dut #(.ADDR_WIDTH(`APB_ADDR_WIDTH), .DATA_WIDTH(`APB_DATA_WIDTH)) dut (
-      .PCLK		        (clk),
-      .PRESETn	        (rst_n),
+    ahb_dut #(.ADDR_WIDTH(`AHB_ADDR_WIDTH), .DATA_WIDTH(`AHB_DATA_WIDTH)) dut (
+      .HCLK		        (clk),
+      .HRESETn	        (rst_n),
       .HSEL             (ahb_if.HSEL),
       .HADDR            (ahb_if.HADDR),
       .HWRITE           (ahb_if.HWRITE),
@@ -26,7 +26,7 @@ module top_tb;
       .HTRANS           (ahb_if.HTRANS),
       .HWDATA           (ahb_if.HWDATA),
       .HRDATA           (ahb_if.HRDATA),
-      .HREADY           (ahb_if.HREADY),
+      .HREADYOUT        (ahb_if.HREADYOUT),
       .HRESP            (ahb_if.HRESP)
     );
 
@@ -34,8 +34,8 @@ module top_tb;
     // 將 Interface 傳入 UVM Config DB
     // -------------------------------------------------------------------------
     initial begin
-        uvm_config_db #(virtual ahb_if.master_mp)::set(
-            null, "uvm_test_top.env.agent.driver",  "vif", ahb_if.master_mp);
+        uvm_config_db #(virtual ahb_if.driver_cb)::set(
+            null, "uvm_test_top.env.agent.driver",  "vif", ahb_if.driver_cb);
         uvm_config_db #(virtual ahb_if.monitor_mp)::set(
             null, "uvm_test_top.env.agent.monitor", "vif", ahb_if.monitor_mp);
 

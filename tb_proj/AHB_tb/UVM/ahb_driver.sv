@@ -111,7 +111,7 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
         ahb_seq_item item;
         forever begin
             @(vif.driver_cb);
-            if ( !vif.driver_cb.HRESETn ) begin
+            if ( !vif.HRESETn ) begin
                 drive_idle();
             end else begin
                 addr_phase_item_q.get(item);
@@ -124,7 +124,7 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
                     vif.driver_cb.HBURST      <= item.burst;
                     vif.driver_cb.HTRANS      <= item.trans;
                     if ( item.write ) begin
-                        data_phase_item_q.push_back(item);
+                        data_phase_item_q.put(item);
                     end
                 end
             end
@@ -138,7 +138,7 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
         ahb_seq_item item;
         forever begin
             @(vif.driver_cb);
-            if ( !vif.driver_cb.HRESETn ) begin
+            if ( !vif.HRESETn ) begin
                 drive_idle();
             end else begin
                 data_phase_item_q.get(item);

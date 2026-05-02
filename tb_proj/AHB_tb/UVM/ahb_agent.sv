@@ -12,7 +12,7 @@ class ahb_agent extends uvm_agent;
     // Sub-components
     ahb_driver    driver;
     ahb_monitor   monitor;
-    ahb_sequencer sequencer;
+    ahb_sequencer #(ahb_seq_item) sequencer;
 
     // Export analysis port upward to environment
     uvm_analysis_port #(ahb_seq_item) ap;
@@ -33,7 +33,7 @@ class ahb_agent extends uvm_agent;
         monitor   = ahb_monitor::type_id::create("monitor", this);
         if (get_is_active() == UVM_ACTIVE) begin
             driver    = ahb_driver::type_id::create("driver", this);
-            sequencer = uvm_sequencer #(ahb_item)::type_id::create("sequencer", this);
+            sequencer = uvm_sequencer #(ahb_seq_item)::type_id::create("sequencer", this);
         end
     endfunction
 
