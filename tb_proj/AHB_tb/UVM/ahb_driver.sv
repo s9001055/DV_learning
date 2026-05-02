@@ -110,11 +110,11 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
     task addr_phase_drive_thread;
         ahb_seq_item item;
         forever begin
+            addr_phase_item_q.get(item);
             @(vif.driver_cb);
             if ( !vif.HRESETn ) begin
                 drive_idle();
             end else begin
-                addr_phase_item_q.get(item);
                 if (vif.driver_cb.HREADYOUT) begin
                     // Drive Master Signals
                     vif.driver_cb.HSEL        <= 1'b1;
@@ -137,11 +137,11 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
     task data_phase_drive_thread;
         ahb_seq_item item;
         forever begin
+            data_phase_item_q.get(item);
             @(vif.driver_cb);
             if ( !vif.HRESETn ) begin
                 drive_idle();
             end else begin
-                data_phase_item_q.get(item);
                 if (vif.driver_cb.HREADYOUT) begin
 
                     if (item.write) begin

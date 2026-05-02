@@ -17,11 +17,6 @@ class ahb_base_seq extends uvm_sequence #(ahb_seq_item);
     task write_word(logic [31:0] addr, logic [31:0] data);
         ahb_seq_item item;
         item           = ahb_seq_item::type_id::create("wr_item");
-        item.write     = 1'b1;
-        item.burst     = ahb_seq_item::HBURST_SINGLE;
-        item.size      = ahb_seq_item::HSIZE_WORD;
-        item.trans     = ahb_seq_item::HTRANS_NONSEQ;
-        item.burst_len = 1;
         if (!item.randomize() with {
             addr      == local::addr;
             data      == local::data;
