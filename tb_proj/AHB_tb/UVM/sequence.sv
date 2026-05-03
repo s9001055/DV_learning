@@ -14,7 +14,7 @@ class ahb_base_seq extends uvm_sequence #(ahb_seq_item);
     endfunction
 
     // Helper: single write
-    task write_word(logic [31:0] addr, logic [31:0] data);
+    task write_word(logic [`AHB_ADDR_WIDTH-1:0] addr, logic [`AHB_DATA_WIDTH-1:0] data);
         ahb_seq_item item;
         item           = ahb_seq_item::type_id::create("wr_item");
         if (!item.randomize() with {
@@ -30,7 +30,7 @@ class ahb_base_seq extends uvm_sequence #(ahb_seq_item);
     endtask
 
     // Helper: single read
-    task read_word(logic [31:0] addr, output logic [31:0] rdata);
+    task read_word(logic [`AHB_ADDR_WIDTH-1:0] addr, output logic [`AHB_DATA_WIDTH-1:0] rdata);
         ahb_seq_item item;
         item = ahb_seq_item::type_id::create("rd_item");
         if (!item.randomize() with {
@@ -65,6 +65,7 @@ class ahb_rand_single_seq extends ahb_base_seq;
             item = ahb_seq_item::type_id::create("item");
             start_item(item);
             if (!item.randomize() with {
+                data      == addr;
                 burst     == HBURST_SINGLE;
                 burst_len == 1;
             }) `uvm_fatal("RAND", "Randomize failed")

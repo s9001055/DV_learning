@@ -92,8 +92,8 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
             for (int beat = 0; beat < num_beats; beat++) begin
                 ahb_seq_item addr_item;
                 $cast(addr_item, item.clone());
-                cur_addr        = cur_addr + (1 << item.size);
-                addr_item.addr   = cur_addr;
+                // cur_addr        = cur_addr + (1 << int'(item.size));
+                addr_item.addr   = cur_addr + ((1 << int'(item.size)) * beat);
                 addr_item.trans  = item.trans;
 
                 // put item into addr_phase_item_q
@@ -145,7 +145,7 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
                 if (vif.driver_cb.HREADYOUT) begin
 
                     if (item.write) begin
-                        vif.driver_cb.HWDATA <= (item.data | $urandom());
+                        vif.driver_cb.HWDATA <= item.data;
                     end else begin
                         // Latch read data
                         item.rdata = vif.driver_cb.HRDATA;
