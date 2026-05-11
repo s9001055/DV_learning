@@ -3,16 +3,16 @@ import uvm_pkg::*;
 
 `include "apb_defines.svh"
 
-`include "apb_item.sv"
-`include "interface.sv"
-`include "apb_driver.sv"
-`include "apb_monitor.sv"
-`include "apb_scoreboard.sv"
-// `include "apb_coverage.sv"
-`include "apb_agent.sv"
-`include "apb_env.sv"
-`include "apb_sequence.sv"
-`include "base_test.sv"
+// `include "apb_item.sv"
+// `include "interface.sv"
+// `include "apb_driver.sv"
+// `include "apb_monitor.sv"
+// `include "apb_scoreboard.sv"
+// // `include "apb_coverage.sv"
+// `include "apb_agent.sv"
+// `include "apb_env.sv"
+// `include "apb_sequence.sv"
+// `include "base_test.sv"
 
 
 module top_tb;
