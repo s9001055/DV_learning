@@ -33,7 +33,7 @@ class base_test extends uvm_test;
 endclass
 
 // -----------------------------------------------------------------------------
-// Test 2: Write-Then-Read（核心正確性驗證）
+// Test 1: Write-Then-Read（核心正確性驗證）
 // -----------------------------------------------------------------------------
 class apb_test_wr_rd extends base_test;
     `uvm_component_utils(apb_test_wr_rd)
@@ -48,6 +48,29 @@ class apb_test_wr_rd extends base_test;
         repeat (20) begin
             // 使用 apb_wr_rd_seq  testcase 來測試
             seq = apb_wr_rd_seq::type_id::create("seq");
+            seq.start(env.agent.sequencer);
+        end
+        #100ns;
+        phase.drop_objection(this);
+    endtask
+endclass
+
+// -----------------------------------------------------------------------------
+// Test 2: Random PSTRB Write-Then-Read（核心正確性驗證）
+// -----------------------------------------------------------------------------
+class apb_test_pstrb_random extends base_test;
+    `uvm_component_utils(apb_test_pstrb_random)
+
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    task run_phase(uvm_phase phase);
+        apb_pstrb_random seq;
+        phase.raise_objection(this);
+        repeat (5) begin
+            // 使用 apb_pstrb_random  testcase 來測試
+            seq = apb_pstrb_random::type_id::create("seq");
             seq.start(env.agent.sequencer);
         end
         #100ns;

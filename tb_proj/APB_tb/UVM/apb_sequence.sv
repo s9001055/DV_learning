@@ -48,5 +48,26 @@ class apb_wr_rd_seq extends apb_base_seq;
 endclass
 
 
+// -----------------------------------------------------------------------------
+// Random PSTRB Write-Then-Read Sequence（PSTRB 寫後讀回驗證）
+// -----------------------------------------------------------------------------
+class apb_pstrb_random extends apb_base_seq;
+    `uvm_object_utils(apb_pstrb_random)
+    rand logic [31:0] addr;
+    rand logic [31:0] data;
+    rand logic [3:0] strb;
+    constraint c_align { addr[1:0] == 2'b00; }
+    constraint c_range { addr inside {[32'h0:32'hFFC]}; }
+    constraint c_strb { strb inside {4'h1, 4'h2, 4'h4, 4'h8}; }
+
+    function new(string name = "apb_pstrb_random"); super.new(name); endfunction
+
+    task body();
+        do_write(addr, data, strb);
+        do_read(addr);
+    endtask
+endclass
+
+
 
 
