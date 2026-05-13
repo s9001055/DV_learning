@@ -78,4 +78,39 @@ interface apb_if (
     assert property (p_stable_in_access)
         else `uvm_error("APB_IF", "PADDR/PWRITE/PWDATA/PSTRB changed during ACCESS with PREADY=0")
 
+    // -------------------------------------------------------------------------
+    // Assertion：PRDATA 在 PSEL/PENABLE/PREADY/!PWRITE 時, 不能為Z 或 X
+    // -------------------------------------------------------------------------
+    property p_prdata_valid;
+        @(posedge PCLK) disable iff (!PRESETn)
+        (PSEL && PENABLE && !PWRITE && PREADY) |-> !$isunknown(PRDATA);
+    endproperty
+    assert property (p_prdata_valid)
+        else `uvm_error("APB_IF", "PRDATA unknown during PSEL && PENABLE && !PWRITE && PREADY")    
+
+    // -------------------------------------------------------------------------
+    // Assertion：PSLVERR 在 !(PSEL && PENABLE && PREADY) 時, 必須為 0
+    // -------------------------------------------------------------------------
+    property p_pslverr_only_access;
+        @(posedge PCLK) disable iff (!PRESETn)
+        !(PSEL && PENABLE && PREADY) |-> (PSLVERR == 1'b0);
+    endproperty
+    assert property (p_pslverr_only_access)
+        else `uvm_error("APB_IF", "PSLVERR must be 0 outside access phase")  
+
+    // -------------------------------------------------------------------------
+    // Assertion：PRESETn 為0時 master 的 output port 必須為 0
+    // -------------------------------------------------------------------------
+    property p_reset_idle;
+        @(posedge PCLK)
+        (!PRESETn) |->
+            (PSEL   == 1'b0) &&
+            (PENABLE == 1'b0) &&
+            (PWRITE  == 1'b0) &&
+            (PADDR   == '0  ) &&
+            (PWDATA  == '0  ) &&
+            (PSTRB   == '0  );
+    endproperty
+    assert property (p_reset_idle)
+        else `uvm_error("APB_IF", "All master outputs must be 0 within one cycle of PRESETn deassertion") 
 endinterface
