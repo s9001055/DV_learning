@@ -30,6 +30,12 @@ module apb_memory_slave #(
     assign PREADY = (wait_cnt == WAIT_CYCLES);
     assign PSLVERR = 1'b0; // 暫不模擬錯誤情形
 
+    integer j;
+    initial begin
+        for (j = 0;j < (2**ADDR_WIDTH); j = j + 1)
+            mem[j] = {DATA_WIDTH{1'b0}};
+    end
+
     always @(posedge PCLK or negedge PRESETn) begin
         if (!PRESETn) begin
             wait_cnt <= 4'd0;
