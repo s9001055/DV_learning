@@ -32,8 +32,8 @@ class ahb_driver extends uvm_driver #(ahb_seq_item);
     // -------------------------------------------------------------------------
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        addr_phase_item_q = new();
-        data_phase_item_q = new();
+        addr_phase_item_q = new(1);
+        data_phase_item_q = new(1);
 
         if (!uvm_config_db #(virtual ahb_if.driver_mp)::get(
                 this, "", "vif", vif))
