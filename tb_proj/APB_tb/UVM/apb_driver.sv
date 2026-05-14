@@ -6,7 +6,7 @@ import uvm_pkg::*;
 class apb_driver extends uvm_driver #(apb_item);
     `uvm_component_utils(apb_driver)
 
-    virtual apb_if.master_mp vif;
+    virtual apb_if vif;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -14,7 +14,7 @@ class apb_driver extends uvm_driver #(apb_item);
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db #(virtual apb_if.master_mp)::get(this, "", "vif", vif))
+        if (!uvm_config_db #(virtual apb_if)::get(this, "", "vif", vif))
             `uvm_fatal("NO_VIF", "apb_driver: cannot get virtual interface from config_db")
     endfunction
 
@@ -25,7 +25,7 @@ class apb_driver extends uvm_driver #(apb_item);
         drive_idle();
 
         forever begin
-            @(vif.master_cb);
+            @(posedge vif.PCLK);
             if ( !vif.PRESETn ) begin
                 drive_idle();
             end else begin
@@ -40,12 +40,12 @@ class apb_driver extends uvm_driver #(apb_item);
     // IDLE 狀態：所有輸出拉低
     // -------------------------------------------------------------------------
     task drive_idle();
-        vif.master_cb.PSEL    <= 1'b0;
-        vif.master_cb.PENABLE <= 1'b0;
-        vif.master_cb.PWRITE  <= 1'b0;
-        vif.master_cb.PADDR   <= '0;
-        vif.master_cb.PWDATA  <= '0;
-        vif.master_cb.PSTRB   <= '0;
+        vif.PSEL    <= 1'b0;
+        vif.PENABLE <= 1'b0;
+        vif.PWRITE  <= 1'b0;
+        vif.PADDR   <= '0;
+        vif.PWDATA  <= '0;
+        vif.PSTRB   <= '0;
     endtask
 
     // -------------------------------------------------------------------------
@@ -54,28 +54,27 @@ class apb_driver extends uvm_driver #(apb_item);
     task drive_transfer(apb_item req);
         // --- SETUP Phase ---
         // 第一個 clk: 設定 PADDR, PWRITE, PWDATA, PSTRB, PSEL
-        // @(vif.master_cb);
-        vif.master_cb.PADDR   <= req.paddr;
-        vif.master_cb.PWRITE  <= req.pwrite;
-        vif.master_cb.PWDATA  <= req.pwrite ? req.pwdata : '0;
-        vif.master_cb.PSTRB   <= req.pwrite ? req.pstrb  : '0;
-        vif.master_cb.PSEL    <= 1'b1;
-        vif.master_cb.PENABLE <= 1'b0;
+        vif.PADDR   <= req.paddr;
+        vif.PWRITE  <= req.pwrite;
+        vif.PWDATA  <= req.pwrite ? req.pwdata : '0;
+        vif.PSTRB   <= req.pwrite ? req.pstrb  : '0;
+        vif.PSEL    <= 1'b1;
+        vif.PENABLE <= 1'b0;
 
         // --- ACCESS Phase ---
         // 第二個 clk: 舉起 PENABLE
-        @(vif.master_cb);
-        vif.master_cb.PENABLE <= 1'b1;
+        @(posedge vif.PCLK);
+        vif.PENABLE <= 1'b1;
 
         // 等待 PREADY（Slave 可插入 wait states）
-        @(vif.master_cb iff vif.master_cb.PREADY === 1'b1);
+        @(posedge vif.PCLK iff vif.PREADY === 1'b1);
 
         // 捕捉讀取結果
-        req.prdata  = vif.master_cb.PRDATA;
-        req.pslverr = vif.master_cb.PSLVERR;
+        req.prdata  = vif.PRDATA;
+        req.pslverr = vif.PSLVERR;
 
         // 回到 IDLE
-        @(vif.master_cb);
+        @(posedge vif.PCLK);
         drive_idle();
 
         `uvm_info("APB_DRV", req.convert2string(), UVM_HIGH)
