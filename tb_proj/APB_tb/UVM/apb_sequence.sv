@@ -58,7 +58,7 @@ class apb_pstrb_random extends apb_base_seq;
     rand logic [3:0] strb;
     constraint c_align { addr[1:0] == 2'b00; }
     constraint c_range { addr inside {[32'h0:32'hFFC]}; }
-    constraint c_strb { strb inside {4'h1, 4'h2, 4'h4, 4'h8}; }
+    constraint c_strb { strb inside {[4'h1:4'hF]}; }
 
     function new(string name = "apb_pstrb_random"); super.new(name); endfunction
 
