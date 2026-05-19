@@ -1,14 +1,10 @@
 # AMBA APB
 
-#### VIP for APB Protocol
+## VIP for APB Protocol
 
-## APB Verification Spec
+[APB Verification Spec](./APB_Verification_Spec.md)
 
-./APB_Verification_Spec.md
-
-## APB Test Plan
-
-./APB_Test_Plan.md
+[APB Test Plan](./APB_Test_Plan.md)
 
 ## APB Interface
 
