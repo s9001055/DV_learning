@@ -1,6 +1,6 @@
 # AMBA APB
 
-## VIP for APB Protocol
+## TestBench for APB Protocol
 
 [APB Verification Spec](./APB_Verification_Spec.md)
 
