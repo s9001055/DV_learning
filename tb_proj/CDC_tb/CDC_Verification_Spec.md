@@ -13,7 +13,7 @@ Version 1.0 | Project: CDC Asymc_fifo
 
 ## 1. Overview
 
-This document defines the verification strategy for the APB memory slave DUT (`async_fifo`).
+This document defines the verification strategy for the CDC Asymc_fifo DUT (`async_fifo`).
 
 ---
 
@@ -50,7 +50,7 @@ This document defines the verification strategy for the APB memory slave DUT (`a
 
 | Component           | Role                                                                                 |
 | ------------------- | ------------------------------------------------------------------------------------ |
-| top_tb              | Top-level module; instantiates DUT and apb_if; starts UVM                            |
+| top_tb              | Top-level module; instantiates DUT and cdc_fifo_if; starts UVM                       |
 | cdc_fifo_if         | SystemVerilog interface; SVA assertions                                              |
 | cdc_read_agent      | Read Agent: Contains sequencer, driver, monitor                                      |
 | fifo_read_driver    | Drives Read signals via interface                                                    |
