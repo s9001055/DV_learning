@@ -4,6 +4,7 @@
 
 // 定義資料與位址位寬
 `define CDC_DATA_WIDTH  32
-`define CDC_DEPTH  10
+`define CDC_DEPTH  16
+`define CDC_ADDR_WIDTH  $clog2(CDC_DEPTH)
 
 `endif
