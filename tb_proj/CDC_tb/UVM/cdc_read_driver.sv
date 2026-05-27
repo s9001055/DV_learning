@@ -16,7 +16,7 @@ class fifo_read_driver extends uvm_driver #(fifo_read_item);
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db #(virtual cdc_fifo_if#(.DATA_WIDTH(`CDC_DATA_WIDTH), .ADDR_WIDTH(`CDC_ADDR_WIDTH)))::get(
+        if (!uvm_config_db #(virtual cdc_fifo_if)::get(
                 this, "", "vif", vif))
             `uvm_fatal("RDRV", "Cannot get vif from config_db")
     endfunction

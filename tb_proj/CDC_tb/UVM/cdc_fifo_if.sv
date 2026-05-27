@@ -6,10 +6,7 @@
 `include "cdc_defines.svh"
 import uvm_pkg::*;
 
-interface cdc_fifo_if #(
-    parameter DATA_WIDTH = 8,
-    parameter ADDR_WIDTH = 4
-)(
+interface cdc_fifo_if (
     input logic WCLK,
     input logic RCLK
 );
@@ -17,18 +14,18 @@ interface cdc_fifo_if #(
     // ─── Write 端訊號 ─────────────────────────────────────────────────────
     logic                  WRST_N;
     logic                  WINC;
-    logic [DATA_WIDTH-1:0] WDATA;
+    logic [`CDC_DATA_WIDTH-1:0] WDATA;
     logic                  WFULL;
 
     // ─── Read 端訊號 ──────────────────────────────────────────────────────
     logic                  RRST_N;
     logic                  RINC;
-    logic [DATA_WIDTH-1:0] RDATA;
+    logic [`CDC_DATA_WIDTH-1:0] RDATA;
     logic                  REMPTY;
 
     // ─── DUT 內部 Gray Code pointer（連接到 DUT 的 probe）────────────────
-    logic [ADDR_WIDTH:0] wptr_gray;
-    logic [ADDR_WIDTH:0] rptr_gray;
+    logic [`CDC_ADDR_WIDTH:0] wptr_gray;
+    logic [`CDC_ADDR_WIDTH:0] rptr_gray;
 
     // =========================================================================
     // Clocking Blocks：Driver/Monitor 透過 CB 存取，消除 race condition

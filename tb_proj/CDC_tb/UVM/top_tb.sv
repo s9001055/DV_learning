@@ -42,10 +42,7 @@ module top_tb;
     always #3.76 RCLK = ~RCLK;
 
     // ─── Interface 實例化 ────────────────────────────────────────────────
-    cdc_fifo_if #(
-        .DATA_WIDTH(`CDC_DATA_WIDTH),
-        .ADDR_WIDTH(`CDC_ADDR_WIDTH)
-    ) fifo_if (
+    cdc_fifo_if fifo_if (
         .WCLK(WCLK),
         .RCLK(RCLK)
     );
@@ -87,7 +84,7 @@ module top_tb;
     // ─── config_db 設定 ──────────────────────────────────────────────────
     initial begin
         // 所有層級都可取得 vif
-        uvm_config_db #(virtual cdc_fifo_if#(.DATA_WIDTH(`CDC_DATA_WIDTH), .ADDR_WIDTH(`CDC_ADDR_WIDTH)))::set(
+        uvm_config_db #(virtual cdc_fifo_if)::set(
             null, "uvm_test_top*", "vif", fifo_if);
 
         // 設定兩個 agent 為 ACTIVE mode

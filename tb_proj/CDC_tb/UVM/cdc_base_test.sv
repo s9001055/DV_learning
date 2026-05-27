@@ -41,7 +41,7 @@ class test_basic_rw extends cdc_base_test;
         virtual cdc_fifo_if vif;
         phase.raise_objection(this);
 
-        uvm_config_db #(virtual cdc_fifo_if#(.DATA_WIDTH(`CDC_DATA_WIDTH), .ADDR_WIDTH(`CDC_ADDR_WIDTH)))::get(null, "uvm_test_top", "vif", vif);
+        uvm_config_db #(virtual cdc_fifo_if)::get(null, "uvm_test_top", "vif", vif);
         apply_reset(vif);
 
         wseq = seq_basic_write::type_id::create("wseq");
