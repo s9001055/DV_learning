@@ -4,7 +4,7 @@
 // 產生兩個獨立時脈：WCLK=200MHz(2.5ns)、RCLK=133MHz(3.76ns)
 // 兩個時脈完全非同步，相位關係不固定
 // =============================================================================
-`timescale 1ns/1ps
+// `timescale 1ns/1ps
 
 `include "uvm_macros.svh"
 `include "cdc_defines.svh"
@@ -87,7 +87,7 @@ module top_tb;
     // ─── config_db 設定 ──────────────────────────────────────────────────
     initial begin
         // 所有層級都可取得 vif
-        uvm_config_db #(virtual cdc_fifo_if)::set(
+        uvm_config_db #(virtual cdc_fifo_if#(.DATA_WIDTH(`CDC_DATA_WIDTH), .ADDR_WIDTH(`CDC_ADDR_WIDTH)))::set(
             null, "uvm_test_top*", "vif", fifo_if);
 
         // 設定兩個 agent 為 ACTIVE mode

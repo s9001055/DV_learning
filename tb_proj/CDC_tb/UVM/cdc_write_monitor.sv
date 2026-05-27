@@ -18,7 +18,7 @@ class fifo_write_monitor extends uvm_monitor;
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         ap = new("ap", this);
-        if (!uvm_config_db #(virtual cdc_fifo_if)::get(
+        if (!uvm_config_db #(virtual cdc_fifo_if#(.DATA_WIDTH(`CDC_DATA_WIDTH), .ADDR_WIDTH(`CDC_ADDR_WIDTH)))::get(
                 this, "", "vif", vif))
             `uvm_fatal("MON_W", "Cannot get vif from config_db")
     endfunction

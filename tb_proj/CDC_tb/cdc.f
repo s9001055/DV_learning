@@ -1,6 +1,10 @@
 -uvm
 -sv
 -licqueue
+`timescale 1ns/1ps
+
+// 輸入想要測的 testcase
++UVM_TESTNAME=test_basic_rw
 
 // --- Inc Dir (標頭檔搜尋路徑) ---
 +incdir+./rtl
