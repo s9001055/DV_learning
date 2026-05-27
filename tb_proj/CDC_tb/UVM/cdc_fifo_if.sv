@@ -2,7 +2,9 @@
 // cdc_fifo_if.sv
 // Virtual interface：含雙時脈 clocking block 與 SVA assertions
 // =============================================================================
-import uvm_pkg::*
+`include "uvm_macros.svh"
+`include "cdc_defines.svh"
+import uvm_pkg::*;
 
 interface cdc_fifo_if #(
     parameter DATA_WIDTH = 8,

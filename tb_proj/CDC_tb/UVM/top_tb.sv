@@ -7,10 +7,10 @@
 `timescale 1ns/1ps
 
 `include "uvm_macros.svh"
+`include "cdc_defines.svh"
 import uvm_pkg::*;
 
 // ─── 所有元件 include ────────────────────────────────────────────────────────
-`include "cdc_defines.svh"
 // `include "cdc_fifo_if.sv"
 // `include "cdc_seq_item.sv"
 // `include "cdc_sequence.sv"
