@@ -32,7 +32,7 @@ class fifo_read_monitor extends uvm_monitor;
         forever begin
             // 有效讀取：RINC=1 且 REMPTY=0
             // RDATA 在同一拍有效（組合邏輯輸出），#1step 確保取樣穩定值
-            @(vif.RCLK iff
+            @(posedge vif.RCLK iff
                 (vif.RINC && !vif.REMPTY));
 
             tr = fifo_read_item::type_id::create("rd_tr");

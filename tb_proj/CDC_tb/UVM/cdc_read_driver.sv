@@ -39,16 +39,16 @@ class fifo_read_driver extends uvm_driver #(fifo_read_item);
         // 若 FIFO 空，等到有資料
         while (vif.REMPTY) begin
             `uvm_info("RDRV", "FIFO empty, waiting...", UVM_HIGH)
-            @(vif.RCLK);
+            @(posedge vif.RCLK);
         end
 
         // 透過 clocking block 驅動
         vif.RINC <= 1'b1;
-        @(vif.RCLK);
+        @(posedge vif.RCLK);
 
         vif.RINC <= 1'b0;
 
         // 空閒週期
-        repeat(tr.gap_cycles) @(vif.RCLK);
+        repeat(tr.gap_cycles) @(posedge vif.RCLK);
     endtask
 endclass

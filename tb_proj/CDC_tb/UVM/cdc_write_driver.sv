@@ -39,18 +39,18 @@ class fifo_write_driver extends uvm_driver #(fifo_write_item);
         // 若 FIFO 滿，等到有空位
         while (vif.WFULL) begin
             `uvm_info("WDRV", "FIFO full, waiting...", UVM_HIGH)
-            @(vif.WCLK);
+            @(posedge vif.WCLK);
         end
 
         // 透過 clocking block 驅動（有固定 skew，無 race condition）
         vif.WINC  <= 1'b1;
         vif.WDATA <= tr.data;
-        @(vif.WCLK);
+        @(posedge vif.WCLK);
 
         vif.WINC  <= 1'b0;
         vif.WDATA <= 'x;
 
         // 空閒週期（模擬非連續寫入）
-        repeat(tr.gap_cycles) @(vif.WCLK);
+        repeat(tr.gap_cycles) @(posedge vif.WCLK);
     endtask
 endclass

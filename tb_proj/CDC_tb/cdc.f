@@ -1,6 +1,6 @@
 -uvm
 -sv
--licqueue
+-access +rwc
 -timescale 1ns/1ps
 
 // 輸入想要測的 testcase

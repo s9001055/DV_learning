@@ -99,8 +99,8 @@ module top_tb;
 
     // ─── Waveform dump ───────────────────────────────────────────────────
     initial begin
-        $dumpfile("cdc_fifo.vcd");
-        $dumpvars(0, top_tb);
+      $shm_open("top_tb.shm");
+      $shm_probe(top_tb, "AS");  // A=all signals, S=all levels
     end
 
     // ─── Timeout 保護 ────────────────────────────────────────────────────

@@ -31,7 +31,7 @@ class fifo_write_monitor extends uvm_monitor;
 
         forever begin
             // 等 WINC=1 且 WFULL=0（有效寫入）
-            @(vif.WCLK iff
+            @(posedge vif.WCLK iff
                 (vif.WINC && !vif.WFULL));
 
             tr = fifo_write_item::type_id::create("wr_tr");
