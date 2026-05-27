@@ -43,8 +43,8 @@ module top_tb;
 
     // ─── Interface 實例化 ────────────────────────────────────────────────
     cdc_fifo_if #(
-        .DATA_WIDTH(CDC_DATA_WIDTH),
-        .ADDR_WIDTH(CDC_ADDR_WIDTH)
+        .DATA_WIDTH(`CDC_DATA_WIDTH),
+        .ADDR_WIDTH(`CDC_ADDR_WIDTH)
     ) fifo_if (
         .WCLK(WCLK),
         .RCLK(RCLK)
@@ -52,9 +52,9 @@ module top_tb;
 
     // ─── DUT 實例化 ──────────────────────────────────────────────────────
     async_fifo #(
-        .DATA_WIDTH(CDC_DATA_WIDTH),
-        .DEPTH     (CDC_DEPTH),
-        .ADDR_WIDTH(CDC_ADDR_WIDTH)
+        .DATA_WIDTH(`CDC_DATA_WIDTH),
+        .DEPTH     (`CDC_DEPTH),
+        .ADDR_WIDTH(`CDC_ADDR_WIDTH)
     ) dut (
         // Write 端
         .WCLK   (WCLK),

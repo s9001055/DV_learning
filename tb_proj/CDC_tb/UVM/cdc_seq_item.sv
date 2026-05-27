@@ -8,7 +8,7 @@ import uvm_pkg::*;
 class fifo_write_item extends uvm_sequence_item;
     `uvm_object_utils(fifo_write_item)
 
-    rand logic [DATA_WIDTH-1:0] data;
+    rand logic [`CDC_DATA_WIDTH-1:0] data;
     rand int unsigned            gap_cycles; // 寫入之間的空閒週期數
 
     constraint c_gap { gap_cycles inside {[0:3]}; }
@@ -28,7 +28,7 @@ endclass
 class fifo_read_item extends uvm_sequence_item;
     `uvm_object_utils(fifo_read_item)
 
-    logic [DATA_WIDTH-1:0] data;      // 由 monitor 填入
+    logic [`CDC_DATA_WIDTH-1:0] data;      // 由 monitor 填入
     rand int unsigned       gap_cycles;
 
     constraint c_gap { gap_cycles inside {[0:3]}; }

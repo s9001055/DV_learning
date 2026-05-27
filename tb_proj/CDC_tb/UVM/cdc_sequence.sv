@@ -7,7 +7,7 @@ class fifo_base_write_seq extends uvm_sequence #(fifo_write_item);
     `uvm_object_utils(fifo_base_write_seq)
     function new(string name="fifo_base_write_seq"); super.new(name); endfunction
 
-    task write_data(logic [CDC_DATA_WIDTH-1:0] d, int gap=0);
+    task write_data(logic [`CDC_DATA_WIDTH-1:0] d, int gap=0);
         fifo_write_item tr = fifo_write_item::type_id::create("tr");
         start_item(tr);
         tr.data       = d;
