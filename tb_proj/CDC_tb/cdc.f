@@ -1,3 +1,7 @@
+-uvm
+-sv
+-licqueue
+
 // --- Inc Dir (標頭檔搜尋路徑) ---
 +incdir+./rtl
 +incdir+./UVM
