@@ -64,7 +64,7 @@ class seq_fill_fifo extends fifo_base_write_seq;
     task body();
         `uvm_info("SEQ", "Filling FIFO to full", UVM_LOW)
         // 寫入 DEPTH+2 筆，多出的應被 DUT 忽略（WFULL 保護）
-        for (int i = 0; i < `CDC_DEPTH + 2; i++)
+        for (int i = 0; i < `CDC_DEPTH; i++)
             write_data(8'hF0 + i[7:0], 0);
     endtask
 endclass

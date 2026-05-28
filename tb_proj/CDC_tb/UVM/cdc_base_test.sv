@@ -65,7 +65,7 @@ endclass
 
 // Test 2：REMPTY & WFULL 邊界
 class test_full_boundary extends cdc_base_test;
-    `uvm_component_utils(test_basic_rw)
+    `uvm_component_utils(test_full_boundary)
     function new(string name, uvm_component parent); super.new(name, parent); endfunction
 
     task run_phase(uvm_phase phase);
