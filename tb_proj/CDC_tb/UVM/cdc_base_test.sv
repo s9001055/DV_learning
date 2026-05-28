@@ -80,11 +80,35 @@ class test_full_boundary extends cdc_base_test;
         wseq = seq_fill_fifo::type_id::create("wseq");
         rseq = seq_drain_fifo::type_id::create("rseq");
 
-        // 先寫後讀（等寫完再讀）
+        // 先寫
         wseq.start(env.write_agent.sequencer);
+        @(posedge vif.WCLK);
+        #1step;  // 避免 race，在 clk edge 之後取樣
+        // ── 核心 check ───────────────────────────────────────────
+        if (vif.WFULL !== 1'b1)
+            `uvm_error("TEST_WFULL",
+                $sformatf("WFULL should be 1 after writing %0d items, got %0b",
+                           `CDC_DEPTH, vif.WFULL))
+        else
+            `uvm_info("TEST_WFULL",
+                "PASS: WFULL correctly asserted after FIFO full", UVM_LOW)
+
         // 加一點延遲等同步 latency（2 RCLK）
         repeat(10) @(posedge vif.RCLK);
+
+        // 後讀
         rseq.start(env.read_agent.sequencer);
+        @(posedge vif.RCLK);
+        #1step;  // 避免 race，在 clk edge 之後取樣
+
+        // ── 核心 check ───────────────────────────────────────────
+        if (vif.REMPTY !== 1'b1)
+            `uvm_error("TEST_REMPTY",
+                $sformatf("REMPTY should be 1 after read %0d items, got %0b",
+                           `CDC_DEPTH, vif.REMPTY))
+        else
+            `uvm_info("TEST_REMPTY",
+                "PASS: REMPTY correctly asserted after FIFO empty", UVM_LOW)
 
         #500ns;
         phase.drop_objection(this);
