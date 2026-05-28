@@ -70,4 +70,14 @@ This document defines the verification strategy for the CDC Asymc_fifo DUT (`asy
 
 ## 4. Assertion Strategy (SVA)
 
+| Assertion            | Description                                                                    |
+| -------------------- | ------------------------------------------------------------------------------ |
+| p_no_write_when_full | During WFULL, wptr_gray should not be modified                                 |
+| p_no_read_when_empty | During WFULL, rptr_gray should not be modified                                 |
+| p_wptr_gray_one_hot  | Gray code security: Only 1 bit differs each time the wptr_gray pointer changes |
+| p_rptr_gray_one_hot  | Gray code security: Only 1 bit differs each time the rptr_gray pointer changes |
+| p_no_full_and_empty  | WFULL and REMPTY cannot both be 1                                              |
+| p_reset_clears_wptr  | After a reset, the wptr_gray pointer must be returned to zero                  |
+| p_reset_clears_rptr  | After a reset, the rptr_gray pointer must be returned to zero                  |
+
 ---
