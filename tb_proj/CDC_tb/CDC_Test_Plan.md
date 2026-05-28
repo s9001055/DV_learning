@@ -18,9 +18,10 @@ Version 1.0 | Project: CDC Asymc_fifo
 
 Verify fundamental Asymc_fifo write and read transactions against the shadow memory scoreboard.
 
-| Test Name              | Purpose                                     | Type     | Priority | Pass Condition                    |
-| ---------------------- | ------------------------------------------- | -------- | -------- | --------------------------------- |
-| test_wr_rd_random_addr | 20 random aligned addresses write then read | C-Random | P1       | All read-back values match shadow |
+| Test Name              | Purpose                                     | Type     | Priority | Pass Condition                          |
+| ---------------------- | ------------------------------------------- | -------- | -------- | --------------------------------------- |
+| test_basic_rw          | 8 direct aligned addresses write then read  | Direct   | P1       | All read-back values match write values |
+| test_wr_rd_random_addr | 20 random aligned addresses write then read | C-Random | P1       | All read-back values match write values |
 
 ---
 

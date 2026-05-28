@@ -55,3 +55,28 @@ class seq_basic_read extends fifo_base_read_seq;
             read_one(1);
     endtask
 endclass
+
+// ─── 填滿 FIFO（WFULL 邊界）──────────────────────────────────────
+class seq_fill_fifo extends fifo_base_write_seq;
+    `uvm_object_utils(seq_fill_fifo)
+    function new(string name="seq_fill_fifo"); super.new(name); endfunction
+
+    task body();
+        `uvm_info("SEQ", "Filling FIFO to full", UVM_LOW)
+        // 寫入 DEPTH+2 筆，多出的應被 DUT 忽略（WFULL 保護）
+        for (int i = 0; i < `CDC_DEPTH + 2; i++)
+            write_data(8'hF0 + i[7:0], 0);
+    endtask
+endclass
+
+// ─── 取空 FIFO（REMPTY 邊界）──────────────────────────────────────
+class seq_drain_fifo extends fifo_base_read_seq;
+    `uvm_object_utils(seq_drain_fifo)
+    function new(string name="seq_drain_fifo"); super.new(name); endfunction
+
+    task body();
+        `uvm_info("SEQ", "Draining FIFO", UVM_LOW)
+        for (int i = 0; i < `CDC_DEPTH; i++)
+            read_one(0);
+    endtask
+endclass
