@@ -36,7 +36,6 @@ class axi_env extends uvm_env;
         rst_cfg.exit_mode = axi_reset_config::WAIT_SIGNAL;
 
         rst_mon = axi_reset_monitor::type_id::create("rst_mon", this);
-        rst_mon.rst_cfg = rst_cfg;
 
         // Master agent: active
         uvm_config_db#(uvm_active_passive_enum)::set(this, "mst_agent", "is_active", UVM_ACTIVE);
@@ -65,6 +64,9 @@ class axi_env extends uvm_env;
 
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
+
+        // Reset Monitor rst_cfg connect
+        rst_mon.rst_cfg = rst_cfg;
 
         // Monitor → scoreboard + coverage
         mst_agent.mon.ap.connect(sb.ap_imp);
