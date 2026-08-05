@@ -1,0 +1,82 @@
+`ifndef AXI_ENV_SV
+`define AXI_ENV_SV
+
+// forward-declare RAL types(實際 include 在 top testbench file 上層)
+typedef class axi_reg_block;
+typedef class axi_reg_adapter;
+
+class axi_env extends uvm_env;
+    `uvm_component_utils(axi_env)
+
+    axi_agent               mst_agent;
+    axi_agent               slv_agent;
+    axi_scoreboard          sb;
+    axi_coverage            cov;
+    axi_virtual_sequencer   v_sqr;
+
+    // // RAL
+    // axi_reg_block                              reg_model;
+    // axi_reg_adapter                            reg_adapter;
+    // uvm_reg_predictor #(axi_transaction)       reg_predictor;
+
+    bit has_ral = 0;
+
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        void'(uvm_config_db#(bit)::get(this, "", "has_ral", has_ral));
+
+        // Master agent: active
+        uvm_config_db#(uvm_active_passive_enum)::set(this, "mst_agent", "is_active", UVM_ACTIVE);
+        uvm_config_db#(axi_agent_role_e)::set(this, "mst_agent", "role", AXI_MASTER);
+        mst_agent = axi_agent::type_id::create("mst_agent", this);
+
+        // Slave agent: default passive(可透過 test override)
+        uvm_config_db#(uvm_active_passive_enum)::set(this, "slv_agent", "is_active", UVM_PASSIVE);
+        uvm_config_db#(axi_agent_role_e)::set(this, "slv_agent", "role", AXI_SLAVE);
+        slv_agent = axi_agent::type_id::create("slv_agent", this);
+
+        sb    = axi_scoreboard::type_id::create("sb",    this);
+        cov   = axi_coverage  ::type_id::create("cov",   this);
+        v_sqr = axi_virtual_sequencer::type_id::create("v_sqr", this);
+
+        // if (has_ral) begin
+        //     if (reg_model == null) begin
+        //         reg_model = axi_reg_block::type_id::create("reg_model", , get_full_name());
+        //         reg_model.build();
+        //         reg_model.lock_model();
+        //     end
+        //     reg_adapter   = axi_reg_adapter::type_id::create("reg_adapter", , get_full_name());
+        //     reg_predictor = uvm_reg_predictor#(axi_transaction)::type_id::create("reg_predictor", this);
+        // end
+    endfunction
+
+    function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+
+        // Monitor → scoreboard + coverage
+        mst_agent.mon.ap.connect(sb.ap_imp);
+        mst_agent.mon.ap.connect(cov.analysis_export);
+
+        // Virtual sequencer 綁 sub-sequencer
+        v_sqr.mst_sqr = mst_agent.sqr;
+        if (slv_agent.get_is_active() == UVM_ACTIVE)
+            v_sqr.slv_sqr = slv_agent.sqr;
+
+        // // RAL 連接
+        // if (has_ral) begin
+        //     reg_model.default_map.set_sequencer(mst_agent.sqr, reg_adapter);
+        //     reg_model.default_map.set_auto_predict(0);   // 用 passive predictor
+
+        //     reg_predictor.map     = reg_model.default_map;
+        //     reg_predictor.adapter = reg_adapter;
+        //     mst_agent.mon.ap.connect(reg_predictor.bus_in);
+        // end
+    endfunction
+
+endclass : axi_env
+
+`endif
