@@ -12,6 +12,7 @@ class axi_agent extends uvm_agent;
     axi_agent_role_e role = AXI_MASTER;
 
     axi_mst_driver mst_drv;
+    axi_slv_driver slv_drv;
     axi_sequencer  sqr;
     axi_monitor    mon;
 
