@@ -12,6 +12,8 @@ class axi_env extends uvm_env;
     axi_agent               slv_agent;
     axi_scoreboard          sb;
     axi_coverage            cov;
+    axi_reset_monitor       rst_mon;
+    axi_reset_config        rst_cfg;
     axi_virtual_sequencer   v_sqr;
 
     // // RAL
@@ -28,6 +30,13 @@ class axi_env extends uvm_env;
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         void'(uvm_config_db#(bit)::get(this, "", "has_ral", has_ral));
+
+        // Reset Config and Reset Monitor 
+        rst_cfg = axi_reset_config::type_id::create("rst_cfg", this);
+        rst_cfg.exit_mode = axi_reset_config::WAIT_SIGNAL;
+
+        rst_mon = axi_reset_monitor::type_id::create("rst_mon", this);
+        rst_mon.rst_cfg = rst_cfg;
 
         // Master agent: active
         uvm_config_db#(uvm_active_passive_enum)::set(this, "mst_agent", "is_active", UVM_ACTIVE);
