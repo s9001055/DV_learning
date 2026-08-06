@@ -16,15 +16,14 @@ class axi_reset_monitor extends uvm_component;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
+        ev_reset_start = new("ev_reset_start");
+        ev_reset_done  = new("ev_reset_done");
     endfunction
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         if (!uvm_config_db#(virtual axi_if)::get(this, "", "vif", vif))
             `uvm_fatal(get_type_name(), "Cannot get axi_if from config_db")
-        
-        ev_reset_start = new("ev_reset_start");
-        ev_reset_done  = new("ev_reset_done");
     endfunction
 
     task run_phase(uvm_phase phase);
