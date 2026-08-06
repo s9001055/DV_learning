@@ -63,10 +63,6 @@ class axi_mst_monitor extends uvm_monitor;
 
             // 進入 reset，執行 reset
             reset_signals();
-
-            // 停掉所有 sequence
-            if (m_sequencer != null)
-                m_sequencer.stop_sequences();
         end
     endtask
 
