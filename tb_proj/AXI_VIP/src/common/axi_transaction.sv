@@ -22,6 +22,9 @@ class axi_transaction extends uvm_sequence_item;
     rand bit                           inject_err;
     rand int unsigned                  err_type;
 
+    // 區分不同 channel 的 item
+    rand axi_channel_e                  channel;
+
     // ---- Constraints ----
     constraint c_size_bus   { size inside {[0:$clog2(AXI_STRB_W)]}; }
 

@@ -69,6 +69,10 @@ class axi_env extends uvm_env;
         // Reset Monitor rst_cfg connect
         rst_mon.rst_cfg = rst_cfg;
 
+        // Passing reset_monitor to agent
+        mst_agent.rst_mon = rst_mon;
+        slv_agent.rst_mon = rst_mon;
+
         // Monitor → scoreboard + coverage
         mst_agent.mon.ap.connect(sb.ap_imp);
         mst_agent.mon.ap.connect(cov.analysis_export);

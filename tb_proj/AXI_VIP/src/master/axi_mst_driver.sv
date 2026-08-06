@@ -4,7 +4,9 @@
 class axi_mst_driver extends uvm_driver #(axi_transaction);
     `uvm_component_utils(axi_mst_driver)
 
-    virtual axi_if vif;
+    virtual axi_if      vif;
+
+    axi_reset_monitor   rst_mon;
 
     // 每個 channel 的 mailbox, 收集要 drive 的 item
     mailbox #(axi_transaction) aw_mbx;
@@ -25,16 +27,34 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
     endfunction
 
     task run_phase(uvm_phase phase);
-        reset_signals();
-        @(posedge vif.aresetn);
-        fork
-            get_req_dispatch();
-            drive_aw();
-            drive_w();
-            drive_b();
-            drive_ar();
-            drive_r();
-        join_none
+        forever begin
+            if (rst_mon.in_reset) begin
+                reset_signals();
+                rst_mon.ev_reset_done.wait_trigger();
+            end
+
+            fork
+                get_req_dispatch();
+                drive_aw();
+                drive_w();
+                drive_b();
+                drive_ar();
+                drive_r();
+
+                begin : reset_thread
+                    rst_mon.ev_reset_start.wait_trigger();
+                end
+            join_any
+
+            disable fork;
+
+            // 進入 reset，執行 reset
+            reset_signals();
+
+            // 停掉所有 sequence
+            if (m_sequencer != null)
+                m_sequencer.stop_sequences();
+        end
     endtask
 
     // 初始 idle 值
@@ -46,18 +66,36 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
         vif.mst_drv_cb.rready  <= 1'b0;
     endtask
 
-    // 從 seq_item_port 取交易,依 direction 丟到對應 mailbox
+    // 從 seq_item_port 取交易,依 direction 跟 channel 丟到對應 mailbox
     virtual task get_req_dispatch();
         axi_transaction req, rsp;
         forever begin
             seq_item_port.get_next_item(req);
-            if (req.direction == AXI_WRITE) begin
-                aw_mbx.put(req);
-                w_mbx.put(req);
-            end
-            else begin
-                ar_mbx.put(req);
-            end
+            case (req.channel)
+                AXI_CH_AW: begin
+                    aw_mbx.put(req);
+                end
+                AXI_CH_W: begin
+                    w_mbx.put(req);
+                end
+                AXI_CH_AR: begin
+                    ar_mbx.put(req);
+                end
+                AXI_CH_AUTO: begin
+                    if (req.direction == AXI_WRITE) begin
+                        aw_mbx.put(req);
+                        w_mbx.put(req);
+                    end
+                    else begin
+                        ar_mbx.put(req);
+                    end
+                end
+                default: begin
+                    aw_mbx.put(req);
+                    w_mbx.put(req);
+                    ar_mbx.put(req);
+                end
+            endcase
             // 立刻 item_done,讓 sequence 可以繼續產生 outstanding txn
             seq_item_port.item_done();
         end

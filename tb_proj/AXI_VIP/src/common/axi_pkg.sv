@@ -36,6 +36,13 @@ package axi_pkg;
         AXI_EXCLUSIVE = 1'b1 
     } axi_lock_e;
 
+    typedef enum { 
+        AXI_CH_AW, 
+        AXI_CH_W, 
+        AXI_CH_AR,
+        AXI_CH_AUTO
+    } axi_channel_e;
+
     // Forward-declare / include order
     `include "axi_transaction.sv"
     `include "axi_sequencer.sv"
