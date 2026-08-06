@@ -33,7 +33,8 @@ class axi_env extends uvm_env;
 
         // Reset Config and Reset Monitor 
         rst_cfg = axi_reset_config::type_id::create("rst_cfg", this);
-        rst_cfg.exit_mode = axi_reset_config::WAIT_SIGNAL;
+        rst_cfg.exit_mode = axi_reset_config::WAIT_CYCLES;
+        rst_cfg.exit_cycles = 10;
 
         rst_mon = axi_reset_monitor::type_id::create("rst_mon", this);
 
