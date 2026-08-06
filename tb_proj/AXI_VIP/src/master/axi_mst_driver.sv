@@ -91,9 +91,9 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
                     end
                 end
                 default: begin
-                    aw_mbx.put(req);
-                    w_mbx.put(req);
-                    ar_mbx.put(req);
+                    `uvm_error("MST_DRV", $sformatf(
+                            "Need Set item param req.channel=0x%h",
+                            req.channel))
                 end
             endcase
             // 立刻 item_done,讓 sequence 可以繼續產生 outstanding txn
