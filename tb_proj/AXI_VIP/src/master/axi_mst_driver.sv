@@ -71,31 +71,37 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
         axi_transaction req, rsp;
         forever begin
             seq_item_port.get_next_item(req);
-            case (req.channel)
-                AXI_CH_AW: begin
-                    aw_mbx.put(req);
-                end
-                AXI_CH_W: begin
-                    w_mbx.put(req);
-                end
-                AXI_CH_AR: begin
-                    ar_mbx.put(req);
-                end
-                AXI_CH_AUTO: begin
-                    if (req.direction == AXI_WRITE) begin
+            if (req.direction == AXI_WRITE) begin
+                case (req.channel)
+                    AXI_CH_AW: begin
+                        aw_mbx.put(req);
+                    end
+                    AXI_CH_W: begin
+                        w_mbx.put(req);
+                    end
+                    AXI_CH_AUTO: begin
                         aw_mbx.put(req);
                         w_mbx.put(req);
                     end
-                    else begin
+                    default: begin
+                        `uvm_error("MST_DRV", $sformatf(
+                                "Need Set item param req.channel=0x%h",
+                                req.channel))
+                    end
+                endcase
+            end
+            else begin
+                case (req.channel)
+                    AXI_CH_AR, AXI_CH_AUTO: begin
                         ar_mbx.put(req);
                     end
-                end
+                endcase
                 default: begin
                     `uvm_error("MST_DRV", $sformatf(
                             "Need Set item param req.channel=0x%h",
                             req.channel))
                 end
-            endcase
+            end
             // 立刻 item_done,讓 sequence 可以繼續產生 outstanding txn
             seq_item_port.item_done();
         end
