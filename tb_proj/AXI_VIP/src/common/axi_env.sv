@@ -9,7 +9,7 @@ class axi_env extends uvm_env;
     `uvm_component_utils(axi_env)
 
     axi_mst_agent           mst_agent;
-    axi_mst_cfg             mst_cfg;
+    // axi_mst_cfg             mst_cfg; // move to test case
     axi_slv_agent           slv_agent;
     axi_scoreboard          sb;
     axi_coverage            cov;
@@ -41,10 +41,10 @@ class axi_env extends uvm_env;
 
         // Master agent: active
         mst_agent = axi_mst_agent::type_id::create("mst_agent", this);
-        mst_cfg   = axi_mst_cfg::type_id::create("mst_cfg", this);
+        // mst_cfg   = axi_mst_cfg::type_id::create("mst_cfg", this); // move to test case
         uvm_config_db#(uvm_active_passive_enum)::set(this, "mst_agent", "is_active", UVM_ACTIVE);
         uvm_config_db#(axi_agent_role_e)::set(this, "mst_agent", "role", AXI_MASTER);
-        uvm_config_db#(axi_mst_cfg)::set(this, "mst_agent*", "mst_cfg", mst_cfg);
+        // uvm_config_db#(axi_mst_cfg)::set(this, "mst_agent*", "mst_cfg", mst_cfg); // move to test case
 
         // Slave agent: default passive(可透過 test override)
         uvm_config_db#(uvm_active_passive_enum)::set(this, "slv_agent", "is_active", UVM_PASSIVE);
