@@ -8,8 +8,9 @@ typedef class axi_reg_adapter;
 class axi_env extends uvm_env;
     `uvm_component_utils(axi_env)
 
-    axi_agent               mst_agent;
-    axi_agent               slv_agent;
+    axi_mst_agent           mst_agent;
+    axi_mst_cfg             mst_cfg;
+    axi_slv_agent           slv_agent;
     axi_scoreboard          sb;
     axi_coverage            cov;
     axi_reset_monitor       rst_mon;
@@ -39,14 +40,16 @@ class axi_env extends uvm_env;
         rst_mon = axi_reset_monitor::type_id::create("rst_mon", this);
 
         // Master agent: active
+        mst_agent = axi_mst_agent::type_id::create("mst_agent", this);
+        mst_cfg   = axi_mst_cfg::type_id::create("mst_cfg", this);
         uvm_config_db#(uvm_active_passive_enum)::set(this, "mst_agent", "is_active", UVM_ACTIVE);
         uvm_config_db#(axi_agent_role_e)::set(this, "mst_agent", "role", AXI_MASTER);
-        mst_agent = axi_agent::type_id::create("mst_agent", this);
+        uvm_config_db#(axi_mst_cfg)::set(this, "mst_agent*", "mst_cfg", mst_cfg);
 
         // Slave agent: default passive(可透過 test override)
         uvm_config_db#(uvm_active_passive_enum)::set(this, "slv_agent", "is_active", UVM_PASSIVE);
         uvm_config_db#(axi_agent_role_e)::set(this, "slv_agent", "role", AXI_SLAVE);
-        slv_agent = axi_agent::type_id::create("slv_agent", this);
+        slv_agent = axi_slv_agent::type_id::create("slv_agent", this);
 
         sb    = axi_scoreboard::type_id::create("sb",    this);
         cov   = axi_coverage  ::type_id::create("cov",   this);

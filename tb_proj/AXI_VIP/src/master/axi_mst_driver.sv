@@ -6,6 +6,7 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
 
     virtual axi_if      vif;
 
+    axi_mst_cfg         mst_cfg;
     axi_reset_monitor   rst_mon;
 
     // 每個 channel 的 mailbox, 收集要 drive 的 item
@@ -24,6 +25,11 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
         super.build_phase(phase);
         if (!uvm_config_db#(virtual axi_if)::get(this, "", "vif", vif))
             `uvm_fatal(get_type_name(), "Cannot get axi_if from config_db")
+
+        if (!uvm_config_db#(axi_mst_cfg)::get(this, "", "mst_cfg", mst_cfg)) begin
+            `uvm_info(get_type_name(), "No axi_mst_cfg found, using default (zero delay)", UVM_MEDIUM)
+            mst_cfg = axi_mst_cfg::type_id::create("mst_cfg");
+        end
     endfunction
 
     task run_phase(uvm_phase phase);
@@ -111,6 +117,10 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
         axi_transaction tr;
         forever begin
             aw_mbx.get(tr);
+
+            // delay drive
+            repeat ($urandom_range(mst_cfg.aw_valid_delay_max, mst_cfg.aw_valid_delay_min)) @(vif.mst_drv_cb);
+
             @(vif.mst_drv_cb);
             vif.mst_drv_cb.awid    <= tr.id;
             vif.mst_drv_cb.awaddr  <= tr.addr;
@@ -130,7 +140,14 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
         axi_transaction tr;
         forever begin
             w_mbx.get(tr);
+
+            // delay drive
+            repeat ($urandom_range(mst_cfg.w_valid_delay_max, mst_cfg.w_valid_delay_min)) @(vif.mst_drv_cb);
+
             foreach (tr.data[i]) begin
+                // delay beat
+                repeat ($urandom_range(mst_cfg.w_beat_gap_max, mst_cfg.w_beat_gap_min)) @(vif.mst_drv_cb);
+
                 @(vif.mst_drv_cb);
                 vif.mst_drv_cb.wdata  <= tr.data[i];
                 vif.mst_drv_cb.wstrb  <= tr.strb[i];
@@ -144,14 +161,27 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
     endtask
 
     virtual task drive_b();
-        vif.mst_drv_cb.bready <= 1'b1;   // 簡化:always ready
-        forever @(vif.mst_drv_cb);
+        forever begin
+            // 等 BVALID
+            @(vif.mst_drv_cb);
+            if (vif.mst_drv_cb.bvalid) begin
+                // delay drive
+                repeat ($urandom_range(mst_cfg.bready_delay_max, mst_cfg.bready_delay_min)) @(vif.mst_drv_cb);
+                
+                vif.mst_drv_cb.bready <= 1'b1;
+                @(vif.mst_drv_cb);
+                vif.mst_drv_cb.bready <= 1'b0;
+            end
+        end
     endtask
 
     virtual task drive_ar();
         axi_transaction tr;
         forever begin
             ar_mbx.get(tr);
+            // delay drive
+            repeat ($urandom_range(mst_cfg.ar_valid_delay_max, mst_cfg.ar_valid_delay_min)) @(vif.mst_drv_cb);
+
             @(vif.mst_drv_cb);
             vif.mst_drv_cb.arid    <= tr.id;
             vif.mst_drv_cb.araddr  <= tr.addr;
@@ -168,10 +198,18 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
     endtask
 
     virtual task drive_r();
-        vif.mst_drv_cb.rready <= 1'b1;   // 簡化:always ready
-        forever @(vif.mst_drv_cb);
+        forever begin
+            @(vif.mst_drv_cb);
+            if (vif.mst_drv_cb.rvalid) begin
+                // delay drive
+                repeat ($urandom_range(mst_cfg.rready_delay_max, mst_cfg.rready_delay_min)) @(vif.mst_drv_cb);  
+                
+                vif.mst_drv_cb.rready <= 1'b1;
+                @(vif.mst_drv_cb);
+                vif.mst_drv_cb.rready <= 1'b0;
+            end
+        end
     endtask
-
 endclass : axi_mst_driver
 
 `endif
