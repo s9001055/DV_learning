@@ -43,6 +43,12 @@ package axi_pkg;
         AXI_CH_AUTO
     } axi_channel_e;
 
+    typedef enum { 
+        AXI_R_FIFO,         // AR 先到先回, burst beats 連續
+        AXI_R_OOO,          // 不同 ID 的 burst 可亂序回, beats 連續
+        AXI_R_INTERLEAVE    // 不同 ID 的 beats 可交錯 (interleaving)
+    } axi_read_resp_mode_e;
+
     // Forward-declare / include order
     `include "axi_transaction.sv"
     `include "axi_sequencer.sv"
