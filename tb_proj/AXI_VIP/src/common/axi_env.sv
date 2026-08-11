@@ -9,20 +9,21 @@ class axi_env extends uvm_env;
     `uvm_component_utils(axi_env)
 
     axi_mst_agent           mst_agent;
-    // axi_mst_cfg             mst_cfg; // move to test case
     axi_slv_agent           slv_agent;
     axi_scoreboard          sb;
     axi_coverage            cov;
     axi_reset_monitor       rst_mon;
     axi_reset_config        rst_cfg;
-    axi_virtual_sequencer   v_sqr;
+
+    // axi_mst_cfg             mst_cfg; // move to test case
+    // axi_virtual_sequencer   v_sqr;
 
     // // RAL
     // axi_reg_block                              reg_model;
     // axi_reg_adapter                            reg_adapter;
     // uvm_reg_predictor #(axi_transaction)       reg_predictor;
 
-    bit has_ral = 0;
+    // bit has_ral = 0;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -30,7 +31,7 @@ class axi_env extends uvm_env;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        void'(uvm_config_db#(bit)::get(this, "", "has_ral", has_ral));
+        // void'(uvm_config_db#(bit)::get(this, "", "has_ral", has_ral));
 
         // Reset Config and Reset Monitor 
         rst_cfg = axi_reset_config::type_id::create("rst_cfg", this);
@@ -41,19 +42,21 @@ class axi_env extends uvm_env;
 
         // Master agent: active
         mst_agent = axi_mst_agent::type_id::create("mst_agent", this);
-        // mst_cfg   = axi_mst_cfg::type_id::create("mst_cfg", this); // move to test case
         uvm_config_db#(uvm_active_passive_enum)::set(this, "mst_agent", "is_active", UVM_ACTIVE);
-        uvm_config_db#(axi_agent_role_e)::set(this, "mst_agent", "role", AXI_MASTER);
+        // mst_cfg   = axi_mst_cfg::type_id::create("mst_cfg", this); // move to test case
         // uvm_config_db#(axi_mst_cfg)::set(this, "mst_agent*", "mst_cfg", mst_cfg); // move to test case
 
         // Slave agent: default passive(可透過 test override)
-        uvm_config_db#(uvm_active_passive_enum)::set(this, "slv_agent", "is_active", UVM_PASSIVE);
-        uvm_config_db#(axi_agent_role_e)::set(this, "slv_agent", "role", AXI_SLAVE);
+        uvm_config_db#(uvm_active_passive_enum)::set(this, "slv_agent", "is_active", UVM_ACTIVE);
         slv_agent = axi_slv_agent::type_id::create("slv_agent", this);
 
         sb    = axi_scoreboard::type_id::create("sb",    this);
         cov   = axi_coverage  ::type_id::create("cov",   this);
-        v_sqr = axi_virtual_sequencer::type_id::create("v_sqr", this);
+
+
+
+
+        // v_sqr = axi_virtual_sequencer::type_id::create("v_sqr", this);
 
         // if (has_ral) begin
         //     if (reg_model == null) begin
@@ -80,10 +83,14 @@ class axi_env extends uvm_env;
         mst_agent.mon.ap.connect(sb.ap_imp);
         mst_agent.mon.ap.connect(cov.analysis_export);
 
-        // Virtual sequencer 綁 sub-sequencer
-        v_sqr.mst_sqr = mst_agent.sqr;
-        if (slv_agent.get_is_active() == UVM_ACTIVE)
-            v_sqr.slv_sqr = slv_agent.sqr;
+
+
+
+
+        // // Virtual sequencer 綁 sub-sequencer
+        // v_sqr.mst_sqr = mst_agent.sqr;
+        // if (slv_agent.get_is_active() == UVM_ACTIVE)
+        //     v_sqr.slv_sqr = slv_agent.sqr;
 
         // // RAL 連接
         // if (has_ral) begin
