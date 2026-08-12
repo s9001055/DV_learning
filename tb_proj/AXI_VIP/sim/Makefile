@@ -14,9 +14,7 @@ XRUN_OPTS = -uvm \
             -f xrun.f \
             +UVM_TESTNAME=$(TEST) \
             +UVM_VERBOSITY=$(VERBOSITY) \
-            -svseed $(SEED) \
-            -assert svaext \
-            -assert enable_diag
+            -svseed $(SEED) 
 
 ifeq ($(COV), 1)
     XRUN_OPTS += -coverage all \

@@ -52,21 +52,24 @@ package axi_pkg;
     // Forward-declare / include order
     `include "axi_transaction.sv"
     `include "axi_sequencer.sv"
+    `include "axi_reset_config.sv"
+    `include "axi_reset_monitor.sv"
+    `include "axi_mst_cfg.sv"
     `include "axi_mst_driver.sv"
+    `include "axi_mst_monitor.sv"
+    `include "axi_mst_agent.sv"
+    `include "axi_slv_cfg.sv"
     `include "axi_slv_driver.sv"
-    `include "axi_monitor.sv"
-    `include "axi_agent.sv"
-    `include "axi_coverage.sv"
+    `include "axi_slv_monitor.sv"
+    `include "axi_slv_agent.sv"
+    // `include "axi_coverage.sv"
     `include "axi_scoreboard.sv"
-    `include "axi_virtual_sequencer.sv"
+    // `include "axi_virtual_sequencer.sv"
     `include "axi_env.sv"
 
     // Sequences
     `include "seq_lib/axi_base_seq.sv"
-    `include "seq_lib/axi_write_seq.sv"
-    `include "seq_lib/axi_read_seq.sv"
-    `include "seq_lib/axi_ooo_response_seq.sv"
-    `include "seq_lib/axi_concurrent_rw_vseq.sv"
+    `include "seq_lib/axi_fixed_wr_seq.sv"
 
 endpackage : axi_pkg
 

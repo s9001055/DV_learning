@@ -15,7 +15,7 @@
 ../src/common/axi_pkg.sv
 
 // Tests package
-../tests/tests_pkg.sv
+../test/tests_pkg.sv
 
 // Top
 ../tb/tb_top.sv
