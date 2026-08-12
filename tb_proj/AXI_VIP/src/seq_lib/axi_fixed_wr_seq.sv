@@ -11,8 +11,11 @@ class axi_fixed_wr_seq extends axi_base_seq;
     endfunction
 
     task body();
-        do_write(addr, AXI_FIXED);
-        do_read(addr, AXI_FIXED);
+        write(addr, AXI_FIXED);
+
+        #1000; // wait write done
+
+        read(addr, AXI_FIXED);
     endtask
 endclass : axi_fixed_wr_seq
 

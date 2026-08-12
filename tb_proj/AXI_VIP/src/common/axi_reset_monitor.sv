@@ -28,21 +28,21 @@ class axi_reset_monitor extends uvm_component;
 
     task run_phase(uvm_phase phase);
         // 上電時先等第一次 reset 結束
-        wait(vif.rst_n === 1'b0);
+        wait(vif.aresetn === 1'b0);
         in_reset = 1;
-        wait(vif.rst_n === 1'b1);
+        wait(vif.aresetn === 1'b1);
         wait_dut_stable();
         in_reset = 0;
         ev_reset_done.trigger();
 
         // 之後持續監控
         forever begin
-        @(negedge vif.rst_n);
+        @(negedge vif.aresetn);
         in_reset = 1;
         ev_reset_start.trigger();
         `uvm_info(get_type_name(), "Reset asserted", UVM_MEDIUM)
 
-        @(posedge vif.rst_n);
+        @(posedge vif.aresetn);
         wait_dut_stable();
         in_reset = 0;
         ev_reset_done.trigger();
@@ -52,20 +52,20 @@ class axi_reset_monitor extends uvm_component;
 
     // 根據 config 決定怎麼等 reset 後的穩定
     task wait_dut_stable();
-        case (cfg.exit_mode)
+        case (rst_cfg.exit_mode)
             WAIT_CYCLES: begin
-            repeat(cfg.exit_cycles) @(posedge vif.clk);
+            repeat(rst_cfg.exit_cycles) @(posedge vif.aclk);
             end
 
             WAIT_SIGNAL: begin
             // 等 DUT 自己的 ready 信號
             // wait(vif.init_done === 1'b1);
-            @(posedge vif.clk);
+            @(posedge vif.aclk);
             end
 
             WAIT_BUS_IDLE: begin
-            wait(vif.psel === 1'b0 && vif.penable === 1'b0);
-            @(posedge vif.clk);
+            // wait(vif.psel === 1'b0 && vif.penable === 1'b0);
+            @(posedge vif.aclk);
             end
         endcase
     endtask

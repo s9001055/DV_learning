@@ -9,8 +9,8 @@ package tests_pkg;
     import axi_pkg::*;
     `include "uvm_macros.svh"
 
-    `include "tests/axi_base_test.sv"
-    `include "tests/axi_fixed_rw_test.sv"
+    `include "axi_base_test.sv"
+    `include "axi_fixed_wr_test.sv"
 endpackage
 
 `endif

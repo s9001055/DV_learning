@@ -27,11 +27,8 @@ class axi_slv_agent extends uvm_agent;
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
 
-        slv_mon.rst_mon = rst_mon;
-
         if (get_is_active() == UVM_ACTIVE) begin
             slv_drv.seq_item_port.connect(slv_sqr.seq_item_export);
-            slv_drv.rst_mon = rst_mon;
         end
     endfunction
 

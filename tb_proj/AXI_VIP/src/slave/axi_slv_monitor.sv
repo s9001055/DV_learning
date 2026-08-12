@@ -37,6 +37,10 @@ class axi_slv_monitor extends uvm_monitor;
         super.build_phase(phase);
         if (!uvm_config_db#(virtual axi_if)::get(this, "", "vif", vif))
             `uvm_fatal(get_type_name(), "Cannot get axi_if from config_db")
+
+        if (!uvm_config_db#(axi_reset_monitor)::get(this, "", "rst_mon", rst_mon)) begin
+            `uvm_fatal(get_type_name(), "Cannot get rst_mon from config_db")
+        end
     endfunction
 
     task run_phase(uvm_phase phase);

@@ -9,7 +9,7 @@ class axi_fixed_rw_test extends axi_base_test;
     endfunction
 
     virtual task run_test_body();
-        seq = axi_fixed_wr_seq::type_id::create("seq");
+        axi_fixed_wr_seq seq = axi_fixed_wr_seq::type_id::create("seq");
         seq.start(env.mst_agent.mst_sqr);
     endtask
 

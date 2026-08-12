@@ -21,7 +21,7 @@ class axi_base_seq extends uvm_sequence #(axi_transaction);
         finish_item(write_item);
     endtask
 
-    task read(logic [AXI_AWIDTH-1:0] ar_addr, , axi_burst_e r_burst);
+    task read(logic [AXI_AWIDTH-1:0] ar_addr, axi_burst_e r_burst);
         axi_transaction read_item;
         read_item           = axi_transaction::type_id::create("v");
         if (!read_item.randomize() with {

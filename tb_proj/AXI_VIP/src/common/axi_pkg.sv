@@ -49,6 +49,12 @@ package axi_pkg;
         AXI_R_INTERLEAVE    // 不同 ID 的 beats 可交錯 (interleaving)
     } axi_read_resp_mode_e;
 
+    typedef enum {
+        WAIT_CYCLES,       // 等固定 cycle
+        WAIT_SIGNAL,       // 等 DUT 的 ready 信號
+        WAIT_BUS_IDLE      // 等 bus 上沒有活動
+    } reset_exit_mode_e;
+
     // Forward-declare / include order
     `include "axi_transaction.sv"
     `include "axi_sequencer.sv"
@@ -68,8 +74,8 @@ package axi_pkg;
     `include "axi_env.sv"
 
     // Sequences
-    `include "seq_lib/axi_base_seq.sv"
-    `include "seq_lib/axi_fixed_wr_seq.sv"
+    `include "axi_base_seq.sv"
+    `include "axi_fixed_wr_seq.sv"
 
 endpackage : axi_pkg
 

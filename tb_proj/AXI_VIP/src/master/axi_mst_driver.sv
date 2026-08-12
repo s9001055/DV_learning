@@ -30,6 +30,10 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
             `uvm_info(get_type_name(), "No axi_mst_cfg found, using default (zero delay)", UVM_MEDIUM)
             mst_cfg = axi_mst_cfg::type_id::create("mst_cfg");
         end
+
+        if (!uvm_config_db#(axi_reset_monitor)::get(this, "", "rst_mon", rst_mon)) begin
+            `uvm_fatal(get_type_name(), "Cannot get rst_mon from config_db")
+        end
     endfunction
 
     task run_phase(uvm_phase phase);
@@ -57,9 +61,9 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
             // 進入 reset，執行 reset
             reset_signals();
 
-            // 停掉所有 sequence
-            if (m_sequencer != null)
-                m_sequencer.stop_sequences();
+            // // 停掉所有 sequence
+            // if (m_sequencer != null)
+            //     m_sequencer.stop_sequences();
         end
     endtask
 
@@ -101,12 +105,12 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
                     AXI_CH_AR, AXI_CH_AUTO: begin
                         ar_mbx.put(req);
                     end
+                    default: begin
+                        `uvm_error("MST_DRV", $sformatf(
+                                "Need Set item param req.channel=0x%h",
+                                req.channel))
+                    end
                 endcase
-                default: begin
-                    `uvm_error("MST_DRV", $sformatf(
-                            "Need Set item param req.channel=0x%h",
-                            req.channel))
-                end
             end
             // 立刻 item_done,讓 sequence 可以繼續產生 outstanding txn
             seq_item_port.item_done();

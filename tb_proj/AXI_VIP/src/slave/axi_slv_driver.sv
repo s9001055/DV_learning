@@ -55,6 +55,10 @@ class axi_slv_driver extends uvm_driver #(axi_transaction);
             slv_cfg = axi_slv_cfg::type_id::create("slv_cfg");
         end
 
+        if (!uvm_config_db#(axi_reset_monitor)::get(this, "", "rst_mon", rst_mon)) begin
+            `uvm_fatal(get_type_name(), "Cannot get rst_mon from config_db")
+        end
+
         void'(uvm_config_db#(bit)::get(this, "", "clear_mem_on_reset", clear_mem_on_reset));
     endfunction
 
@@ -69,8 +73,8 @@ class axi_slv_driver extends uvm_driver #(axi_transaction);
                 handle_aw();
                 collect_w();
                 pair_and_respond();
-                handle_ar_and_r();
-                reset_watcher();
+                handle_ar();
+                handle_r();
 
                 begin : reset_thread
                     rst_mon.ev_reset_start.wait_trigger();
@@ -82,9 +86,9 @@ class axi_slv_driver extends uvm_driver #(axi_transaction);
             // 進入 reset，執行 reset
             reset_signals();
 
-            // 停掉所有 sequence
-            if (m_sequencer != null)
-                m_sequencer.stop_sequences();
+            // // 停掉所有 sequence
+            // if (m_sequencer != null)
+            //     m_sequencer.stop_sequences();
         end
     endtask
 
@@ -274,7 +278,7 @@ class axi_slv_driver extends uvm_driver #(axi_transaction);
                 int pick = $urandom_range(rd_q.size() - 1, 0);
                 `uvm_info(get_type_name(),
                           $sformatf("R Channel Send (OoO): id=%0h",
-                                    rd_q.id), UVM_HIGH)
+                                    rd_q[pick].id), UVM_HIGH)
                 send_full_burst(pick);
             end
         end
@@ -289,7 +293,7 @@ class axi_slv_driver extends uvm_driver #(axi_transaction);
                 int beats_to_send = $urandom_range(rd_q[pick].len + 1, 1);
                 `uvm_info(get_type_name(),
                           $sformatf("R Channel Send (interleave): id=%0h beats_to_send=%0d",
-                                    rd_q.id, beats_to_send), UVM_HIGH)
+                                    rd_q[pick].id, beats_to_send), UVM_HIGH)
                 send_partial_burst(pick, beats_to_send);
             end
         end
@@ -337,7 +341,7 @@ class axi_slv_driver extends uvm_driver #(axi_transaction);
     // R 送一筆 beat
     // -------------------------------------------------------------------------
     virtual task send_one_r_beat(ar_hdr_t p, int beat, bit is_last);
-        bit [AXI_AWIDTH-1:0] a = calc_beat_addr_ar(p, i);
+        bit [AXI_AWIDTH-1:0] a = calc_beat_addr_ar(p, beat);
         bit [AXI_DWIDTH-1:0] d = '0;
         for (int j = 0; j < AXI_STRB_W; j++)
             d[8*j +: 8] = mem.exists(a+j) ? mem[a+j] : 8'h00;   

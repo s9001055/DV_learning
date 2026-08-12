@@ -27,11 +27,8 @@ class axi_mst_agent extends uvm_agent;
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
 
-        mst_mon.rst_mon = rst_mon;
-
         if (get_is_active() == UVM_ACTIVE) begin
             mst_drv.seq_item_port.connect(mst_sqr.seq_item_export);
-            mst_drv.rst_mon = rst_mon;
         end
     endfunction
 
