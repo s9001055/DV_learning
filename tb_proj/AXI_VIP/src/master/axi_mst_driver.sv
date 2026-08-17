@@ -69,11 +69,11 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
 
     // 初始 idle 值
     virtual task reset_signals();
-        vif.mst_drv_cb.awvalid <= 1'b0;
-        vif.mst_drv_cb.wvalid  <= 1'b0;
-        vif.mst_drv_cb.bready  <= 1'b0;
-        vif.mst_drv_cb.arvalid <= 1'b0;
-        vif.mst_drv_cb.rready  <= 1'b0;
+        vif.awvalid <= 1'b0;
+        vif.wvalid  <= 1'b0;
+        vif.bready  <= 1'b0;
+        vif.arvalid <= 1'b0;
+        vif.rready  <= 1'b0;
     endtask
 
     // 從 seq_item_port 取交易,依 direction 跟 channel 丟到對應 mailbox
