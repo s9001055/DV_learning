@@ -112,16 +112,17 @@ class axi_mst_monitor extends uvm_monitor;
     // W — 獨立收集,靠 WLAST 分 burst。不看 aw_q。
     // -------------------------------------------------------------------------
     virtual task mon_w();
-        w_burst_t cur;
         forever begin
-            @(vif.mon_cb);
-            if (vif.mon_cb.wvalid && vif.mon_cb.wready) begin
-                cur.data.push_back(vif.mon_cb.wdata);
-                cur.strb.push_back(vif.mon_cb.wstrb);
-                if (vif.mon_cb.wlast) begin
-                    w_data_mbx.put(cur);
-                    cur.data.delete();
-                    cur.strb.delete();
+            w_burst_t cur;
+            forever begin
+                @(vif.mon_cb);
+                if (vif.mon_cb.wvalid && vif.mon_cb.wready) begin
+                    cur.data.push_back(vif.mon_cb.wdata);
+                    cur.strb.push_back(vif.mon_cb.wstrb);
+                    if (vif.mon_cb.wlast) begin
+                        w_data_mbx.put(cur);
+                        break;
+                    end
                 end
             end
         end
