@@ -14,7 +14,11 @@ XRUN_OPTS = -uvm \
             -f xrun.f \
             +UVM_TESTNAME=$(TEST) \
             +UVM_VERBOSITY=$(VERBOSITY) \
-            -svseed $(SEED) 
+            -svseed $(SEED) \
+            -assertion_summary \
+            +assertCover \
+            +assertStatus \
+            -assert_report 
 
 ifeq ($(COV), 1)
     XRUN_OPTS += -coverage all \
