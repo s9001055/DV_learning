@@ -1,7 +1,8 @@
 `ifndef AXI_BIND_SV
 `define AXI_BIND_SV
 
-bind tb_top axi_protocol_checker #(
+`ifdef HAS_DUT
+bind tb_top.dut axi_protocol_checker #(
     .AWIDTH (32),
     .DWIDTH (64),
     .IDWIDTH(4)
@@ -36,5 +37,6 @@ bind tb_top axi_protocol_checker #(
     .rvalid  (s_rvalid),
     .rready  (s_rready)
 );
+`endif
 
 `endif

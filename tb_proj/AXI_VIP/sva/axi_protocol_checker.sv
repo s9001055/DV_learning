@@ -75,7 +75,7 @@ module axi_protocol_checker #(
         @(posedge aclk) disable iff (!aresetn)
         rvalid && !rready |=> rvalid;
     endproperty
-    A_W_VALID_STABLE: assert property (p_r_valid_stable)
+    A_R_VALID_STABLE: assert property (p_r_valid_stable)
         else $error("[SVA_AXI_003c] RVALID dropped before RREADY");
 
     //--------------------------------------------------------------------------
