@@ -28,6 +28,12 @@ class axi_transaction extends uvm_sequence_item;
     // ---- Constraints ----
     constraint c_size_bus   { size inside {[0:$clog2(AXI_STRB_W)]}; }
 
+    constraint c_strb   { 
+        foreach (strb[i]) {
+            $countones(strb[i]) == (1 << size);
+        }
+    }
+
     constraint c_burst_type { burst inside {AXI_FIXED, AXI_INCR, AXI_WRAP}; }
 
     constraint c_wrap_len {
