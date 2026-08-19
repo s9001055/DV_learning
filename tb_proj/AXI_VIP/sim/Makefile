@@ -2,7 +2,7 @@
 # Makefile — AXI VIP simulation with Cadence Xcelium
 #===============================================================================
 
-TEST      ?= axi_fixed_rw_test
+TEST      ?= axi_fixed_wr_test
 SEED      ?= 1
 VERBOSITY ?= UVM_MEDIUM
 COV       ?= 0

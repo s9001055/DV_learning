@@ -11,6 +11,7 @@ package tests_pkg;
 
     `include "axi_base_test.sv"
     `include "axi_fixed_wr_test.sv"
+    `include "axi_incr_wr_test.sv"
 endpackage
 
 `endif

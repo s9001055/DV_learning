@@ -4,6 +4,8 @@
 class axi_incr_wr_seq extends axi_base_seq;
     `uvm_object_utils(axi_incr_wr_seq)
 
+    rand logic [AXI_AWIDTH-1:0] addr;
+
     function new(string name = "axi_incr_wr_seq");
         super.new(name);
     endfunction
