@@ -14,6 +14,10 @@
 ../src/common/axi_if.sv
 ../src/common/axi_pkg.sv
 
+// SVA
+../sva/axi_protocol_checker.sv
+../sva/axi_bind.sv
+
 // Tests package
 ../test/tests_pkg.sv
 
