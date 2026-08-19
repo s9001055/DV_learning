@@ -45,7 +45,7 @@ class axi_transaction extends uvm_sequence_item;
     // 4KB boundary — INCR burst 不得跨界
     constraint c_4kb_boundary {
         (burst == AXI_INCR) ->
-            ( (addr[11:0] + ((len + 1) << size)) <= 12'h1000 );
+            ( (14'h0 + addr[11:0] + ((len + 1) << size)) <= 14'h1000 );
     }
 
     // 陣列長度依 len 決定
