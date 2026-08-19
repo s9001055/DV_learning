@@ -76,6 +76,7 @@ package axi_pkg;
     // Sequences
     `include "axi_base_seq.sv"
     `include "axi_fixed_wr_seq.sv"
+    `include "axi_incr_wr_seq.sv"
 
 endpackage : axi_pkg
 
