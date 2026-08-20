@@ -25,6 +25,7 @@ class axi_base_test extends uvm_test;
 
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
+        phase.get_objection().set_drain_time(this, 5us);
         `uvm_info(get_type_name(), "Base test starting", UVM_LOW)
         #1us;   // 讓 reset 完成
         run_test_body();
