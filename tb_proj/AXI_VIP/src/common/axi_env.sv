@@ -13,12 +13,11 @@ class axi_env extends uvm_env;
     axi_scoreboard          sb;
     axi_reset_monitor       rst_mon;
     axi_reset_config        rst_cfg;
+    axi_coverage            cov;
 
 
     // axi_mst_cfg             mst_cfg; // move to test case
     // axi_virtual_sequencer   v_sqr;
-    // axi_coverage            cov;
-
 
     // // RAL
     // axi_reg_block                              reg_model;
@@ -59,10 +58,9 @@ class axi_env extends uvm_env;
         slv_agent = axi_slv_agent::type_id::create("slv_agent", this);
 
         sb    = axi_scoreboard::type_id::create("sb",    this);
+        cov   = axi_coverage  ::type_id::create("cov",   this);
 
 
-
-        // cov   = axi_coverage  ::type_id::create("cov",   this);
         // v_sqr = axi_virtual_sequencer::type_id::create("v_sqr", this);
 
         // if (has_ral) begin
@@ -79,12 +77,13 @@ class axi_env extends uvm_env;
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
 
-        // Monitor → scoreboard + coverage
+        // MST Monitor → scoreboard + coverage
         mst_agent.mst_mon.ap.connect(sb.ap_imp);
-        slv_agent.slv_mon.ap.connect(sb.ap_imp);
-        // mst_agent.mst_mon.ap.connect(cov.analysis_export);
+        mst_agent.mst_mon.ap.connect(cov.analysis_export);
 
-
+        // // SLV Monitor → scoreboard + coverage
+        // slv_agent.slv_mon.ap.connect(sb.ap_imp);
+        // slv_agent.slv_mon.ap.connect(cov.analysis_export);
 
         // // Virtual sequencer 綁 sub-sequencer
         // v_sqr.mst_sqr = mst_agent.sqr;
