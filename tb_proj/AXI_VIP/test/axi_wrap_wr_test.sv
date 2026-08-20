@@ -9,7 +9,7 @@ class axi_wrap_wr_test extends axi_base_test;
     endfunction
 
     virtual task run_test_body();
-        axi_incr_wr_seq seq = axi_incr_wr_seq::type_id::create("seq");
+        axi_wrap_wr_seq seq = axi_wrap_wr_seq::type_id::create("seq");
         if(!seq.randomize()) begin
             `uvm_error("MST_DRV", "axi_wrap_wr_test randomize fail")
         end
