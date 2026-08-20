@@ -11,7 +11,7 @@ class axi_wrap_wr_test extends axi_base_test;
     virtual task run_test_body();
         axi_wrap_wr_seq seq = axi_wrap_wr_seq::type_id::create("seq");
         if(!seq.randomize()) begin
-            `uvm_error("MST_DRV", "axi_wrap_wr_test randomize fail")
+            `uvm_error("WRAP TEST", "axi_wrap_wr_test randomize fail")
         end
         seq.start(env.mst_agent.mst_sqr);
     endtask
