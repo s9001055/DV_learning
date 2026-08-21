@@ -68,7 +68,7 @@ package axi_pkg;
     `include "axi_slv_driver.sv"
     `include "axi_slv_monitor.sv"
     `include "axi_slv_agent.sv"
-    // `include "axi_coverage.sv"
+    `include "axi_coverage.sv"
     `include "axi_scoreboard.sv"
     // `include "axi_virtual_sequencer.sv"
     `include "axi_env.sv"
