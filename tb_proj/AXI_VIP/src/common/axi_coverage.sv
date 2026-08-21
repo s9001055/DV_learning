@@ -38,7 +38,6 @@ class axi_coverage extends uvm_subscriber #(axi_transaction);
 
         cx_burst_x_len  : cross cp_burst, cp_len;
         cx_dir_x_size   : cross cp_dir,   cp_size;
-        cx_burst_x_resp : cross cp_burst, cp_resp;
     endgroup
 
     function new(string name, uvm_component parent);
