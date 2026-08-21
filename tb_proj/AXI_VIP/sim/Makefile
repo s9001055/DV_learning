@@ -5,7 +5,7 @@
 TEST      ?= axi_fixed_wr_test
 SEED      ?= 1
 VERBOSITY ?= UVM_MEDIUM
-COV       ?= 0
+COV       ?= 1
 
 XRUN_OPTS = -uvm \
             -sv \
@@ -22,14 +22,16 @@ XRUN_OPTS = -uvm \
 
 ifeq ($(COV), 1)
     XRUN_OPTS += -coverage all \
-                 -covfile ccf/axi_coverage.ccf \
                  -covoverwrite \
                  -covtest $(TEST)_seed$(SEED)
+
+#                -covfile ccf/axi_coverage.ccf 
 endif
 
 all: compile run
 
 compile:
+	rm -rf wave.* cov_work
 	xrun $(XRUN_OPTS) -elaborate
 
 run:
