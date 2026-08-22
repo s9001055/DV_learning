@@ -124,6 +124,13 @@ AXI VIP 介面定義於 `axi_if.sv`，參數化支援 AWIDTH / DWIDTH / IDWIDTH�
 | 005a-b | `A_AW/AR_WRAP_LEN` | A3.4.1 | WRAP burst len 必須為 1/3/7/15 |
 | 006a-b | `A_AW/AR_WRAP_ALIGN` | A3.4.1 | WRAP burst 起始位址必須 size-aligned |
 | 007a-b | `A_AW/AR_4KB` | A3.4.1 | INCR burst 不可跨越 4KB boundary |
+| 008-a | `A_BVALID_DEPENDENCY` | A2.3.2.1 | BVALID 必須等 AW+W handshake 都完成（含 WLAST） |
+| 008-b | `A_RVALID_DEPENDENCY` | A2.3.2.2 | RVALID 必須等 AR handshake 完成 |
+| 009-a | `A_WLAST_POSITION` | A3.4 | WLAST 必須出現在第 AWLEN+1 個 W beat |
+| 009-b | `A_RLAST_POSITION` | A3.4 | RLAST 必須出現在第 ARLEN+1 個 R beat |
+| 0010-a | `A_AR_PAYLOAD_STABLE` | A3.2.2 | AR payload stable（目前只有 AW 的 payload stable） |
+| 0010-b | `A_W_PAYLOAD_STABLE` | A3.2.2 | W channel payload stable until handshake |
+| 0010-c | `A_B_VALID_STABLE` | A3.2.2 | BVALID stable until BREADY |
 
 ---
 
@@ -178,7 +185,6 @@ AXI VIP 介面定義於 `axi_if.sv`，參數化支援 AWIDTH / DWIDTH / IDWIDTH�
 | T14 | `axi_reset_mid_txn_test` | None | Transaction 進行中觸發 reset，驗證 `reset_monitor` 協調所有 component 正確復原 |
 | T15 | `axi_4kb_boundary_edge_test` | None | INCR burst 接近 4KB 邊界，驗證 SVA `A_AW/AR_4KB` |
 | T16 | `axi_raw_hazard_test` | None | 同一位址的 write 未完成就發 read，觀察 scoreboard 行為 |
-
 
 ---
 
