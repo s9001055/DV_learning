@@ -165,6 +165,20 @@ AXI VIP 介面定義於 `axi_if.sv`，參數化支援 AWIDTH / DWIDTH / IDWIDTH�
 | T01 | `axi_fixed_wr_test` | 已實作 | FIXED burst write-then-read，單筆，`#1000` 等待後讀回 |
 | T02 | `axi_incr_wr_test` | 已實作 | INCR burst write-then-read，隨機 len/size/addr |
 | T03 | `axi_wrap_wr_test` | 已實作 | WRAP burst write-then-read，constraint 限制 len=1/3/7/15 |
+| T04 | `axi_random_rw_test` | None | 全隨機 burst/len/size/addr/id，連續多筆 write-then-read |
+| T05 | `axi_outstanding_wr_test` | None | 多筆 write 同時 outstanding（不等 B response 就發下一筆），驗證 mailbox 與 ID ordering |
+| T06 | `axi_outstanding_rd_test` | None | 多筆 read 同時 outstanding，搭配不同 ID |
+| T07 | `axi_concurrent_rw_test` | None | Read 與 Write 同時進行（parallel fork），驗證 driver 的多通道並行 |
+| T08 | `axi_backpressure_test` | None | 透過 `mst_cfg` / `slv_cfg` 設定大範圍延遲，驗證無死結 |
+| T09 | `axi_w_before_aw_test` | None | 強制 W channel 先發（透過 `mst_cfg` 對 AW 做delay drive），驗證 slave pairing |
+| T10 | `axi_wrap_boundary_test` | None | 聚焦 WRAP burst 位址回繞，起始位址刻意置於邊界附近 |
+| T11 | `axi_r_ooo_test` | None | Slave 設定 `read_resp_mode = AXI_R_OOO`，驗證 monitor 的 per-ID tracking |
+| T12 | `axi_r_interleave_test` | None | Slave 設定 `AXI_R_INTERLEAVE`，驗證 beat 層級交錯 |
+| T13 | `axi_max_outstanding_stress` | None | 逼近 outstanding 上限之壓力測試 |
+| T14 | `axi_reset_mid_txn_test` | None | Transaction 進行中觸發 reset，驗證 `reset_monitor` 協調所有 component 正確復原 |
+| T15 | `axi_4kb_boundary_edge_test` | None | INCR burst 刻意接近 4KB 邊界，驗證 SVA `A_AW/AR_4KB` 觸發 |
+| T16 | `axi_raw_hazard_test` | None | 同一位址的 write 未完成就發 read，觀察 scoreboard 行為 |
+
 
 ---
 
