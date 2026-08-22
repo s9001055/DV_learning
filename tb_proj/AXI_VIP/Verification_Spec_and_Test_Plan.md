@@ -111,7 +111,7 @@ AXI VIP 介面定義於 `axi_if.sv`，參數化支援 AWIDTH / DWIDTH / IDWIDTH�
 
 ## 4. SVA Protocol Checker 分析
 
-`axi_protocol_checker.sv` 定義了 15 條 assertion，涵蓋協定核心規則：
+`axi_protocol_checker.sv` 定義了assertion，涵蓋協定核心規則：
 
 | SVA 編號 | Assertion 名稱 | 對應規格 | 說明 |
 |---|---|---|---|
