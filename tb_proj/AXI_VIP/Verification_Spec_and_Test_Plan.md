@@ -115,22 +115,18 @@ AXI VIP 介面定義於 `axi_if.sv`，參數化支援 AWIDTH / DWIDTH / IDWIDTH�
 
 | SVA 編號 | Assertion 名稱 | 對應規格 | 說明 |
 |---|---|---|---|
-| 001 | `A_AW_VALID_STABLE` | A3.2.2 | AWVALID 拉高後不可在 AWREADY 前撤回 |
-| 002 | `A_AW_PAYLOAD_STABLE` | A3.2.2 | AWVALID && !AWREADY 期間 payload 不可變 |
-| 003a | `A_AR_VALID_STABLE` | A3.2.2 | ARVALID stable until ARREADY |
-| 003b | `A_W_VALID_STABLE` | A3.2.2 | WVALID stable until WREADY |
-| 003c | `A_R_VALID_STABLE` | A3.2.2 | RVALID stable until RREADY |
-| 004a-e | `A_RESET_LOW_*VALID` | A3.1.2 | Reset 期間所有 VALID 必須為 0 |
-| 005a-b | `A_AW/AR_WRAP_LEN` | A3.4.1 | WRAP burst len 必須為 1/3/7/15 |
-| 006a-b | `A_AW/AR_WRAP_ALIGN` | A3.4.1 | WRAP burst 起始位址必須 size-aligned |
-| 007a-b | `A_AW/AR_4KB` | A3.4.1 | INCR burst 不可跨越 4KB boundary |
-| 008-a | `A_BVALID_DEPENDENCY` | A2.3.2.1 | BVALID 必須等 AW+W handshake 都完成（含 WLAST） |
-| 008-b | `A_RVALID_DEPENDENCY` | A2.3.2.2 | RVALID 必須等 AR handshake 完成 |
-| 009-a | `A_WLAST_POSITION` | A3.4 | WLAST 必須出現在第 AWLEN+1 個 W beat |
-| 009-b | `A_RLAST_POSITION` | A3.4 | RLAST 必須出現在第 ARLEN+1 個 R beat |
-| 0010-a | `A_AR_PAYLOAD_STABLE` | A3.2.2 | AR payload stable（目前只有 AW 的 payload stable） |
-| 0010-b | `A_W_PAYLOAD_STABLE` | A3.2.2 | W channel payload stable until handshake |
-| 0010-c | `A_B_VALID_STABLE` | A3.2.2 | BVALID stable until BREADY |
+| 001a | `A_AR_VALID_STABLE` | A3.2.2 | ARVALID stable until ARREADY |
+| 001b | `A_W_VALID_STABLE` | A3.2.2 | WVALID stable until WREADY |
+| 001c | `A_R_VALID_STABLE` | A3.2.2 | RVALID stable until RREADY |
+| 001d | `A_B_VALID_STABLE` | A3.2.2 | BVALID stable until BREADY |
+| 001e | `A_AW_VALID_STABLE` | A3.2.2 | AWVALID 拉高後不可在 AWREADY 前撤回 |
+| 002a | `A_AW_PAYLOAD_STABLE` | A3.2.2 | AWVALID && !AWREADY 期間 payload 不可變 |
+| 002b | `A_AR_PAYLOAD_STABLE` | A3.2.2 | AR payload stable |
+| 002c | `A_W_PAYLOAD_STABLE` | A3.2.2 | W channel payload stable until handshake |
+| 003a-e | `A_RESET_LOW_*VALID` | A3.1.2 | Reset 期間所有 VALID 必須為 0 |
+| 004a-b | `A_AW/AR_WRAP_LEN` | A3.4.1 | WRAP burst len 必須為 1/3/7/15 |
+| 005a-b | `A_AW/AR_WRAP_ALIGN` | A3.4.1 | WRAP burst 起始位址必須 size-aligned |
+| 006a-b | `A_AW/AR_4KB` | A3.4.1 | INCR burst 不可跨越 4KB boundary |
 
 ---
 
