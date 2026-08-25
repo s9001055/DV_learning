@@ -158,6 +158,7 @@ class axi_mst_driver extends uvm_driver #(axi_transaction);
                 vif.mst_drv_cb.wlast  <= (i == tr.data.size()-1);
                 vif.mst_drv_cb.wvalid <= 1'b1;
                 do @(vif.mst_drv_cb); while (!vif.mst_drv_cb.wready);
+                vif.mst_drv_cb.wvalid <= 1'b0;
             end
             vif.mst_drv_cb.wvalid <= 1'b0;
             vif.mst_drv_cb.wlast  <= 1'b0;

@@ -16,6 +16,7 @@ module axi_protocol_checker #(
     input logic awvalid, awready,
     // W
     input logic [DWIDTH-1:0] wdata, 
+    input logic [(DWIDTH/8)-1:0] wstrb, 
     input logic wlast, wvalid, wready,
     // B
     input logic [IDWIDTH-1:0] bid, 

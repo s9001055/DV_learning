@@ -11,10 +11,11 @@ class axi_random_wr_seq extends axi_base_seq;
     endfunction
 
     task body();
+        axi_transaction write_item;
+        axi_transaction read_item;
         `uvm_info(get_type_name(), $sformatf("Repeat count=%0d", count), UVM_LOW)
 
-        repeat(count) {
-            axi_transaction write_item;
+        repeat(count) begin
             write_item           = axi_transaction::type_id::create("write_item");
             if (!write_item.randomize() with {
                 direction   == AXI_WRITE;
@@ -25,7 +26,6 @@ class axi_random_wr_seq extends axi_base_seq;
 
             #1000; // wait write done
 
-            axi_transaction read_item;
             read_item           = axi_transaction::type_id::create("v");
             if (!read_item.randomize() with {
                 direction   == AXI_READ;
@@ -33,7 +33,7 @@ class axi_random_wr_seq extends axi_base_seq;
             }) `uvm_fatal("RAND", "read_item randomize failed")
             start_item(read_item);
             finish_item(read_item);
-        }
+        end
     endtask
 endclass : axi_random_wr_seq
 

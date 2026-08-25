@@ -44,6 +44,7 @@ module tb_top;
         .awready (axi_bus.awready),
         // W
         .wdata   (axi_bus.wdata),
+        .wstrb   (axi_bus.wstrb),
         .wlast   (axi_bus.wlast),
         .wvalid  (axi_bus.wvalid),
         .wready  (axi_bus.wready),
