@@ -73,7 +73,7 @@
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `axi_mst_driver`           | Mailbox 架構，AW/W/AR 各自獨立 thread 驅動，支援 channel 欄位（`AXI_CH_AUTO` / `AXI_CH_AW` / `AXI_CH_W`）分離控制，可模擬 W-before-AW |
 | `axi_slv_driver`           | `handle_aw()` + `collect_w()` + `pair_and_respond()` 三段式 FIFO 配對，正確處理 AW/W 到達順序不確定性，寫入 byte-addressed `mem[]`    |
-| `axi_slv_driver` R channel | 3 種 response mode：`AXI_R_FIFO`（先到先回）、`AXI_R_OOO`（隨機挑 burst）、`AXI_R_INTERLEAVE`（beat 層級交錯）                        |
+| `axi_slv_driver`           | R channel 3 種 response mode：`AXI_R_FIFO`（先到先回）、`AXI_R_OOO`（隨機挑 burst）、`AXI_R_INTERLEAVE`（beat 層級交錯）                        |
 | `axi_mst_monitor`          | AW+W 獨立收集再 FIFO 配對，B response 用 ID matching，R channel 支援 per-ID beat counter（interleaving 安全）                         |
 | `axi_scoreboard`           | 單一 `analysis_imp`，依 direction 分流 `handle_write` / `handle_read`，用 shadow memory byte-level 比對                               |
 | `axi_coverage`             | `uvm_subscriber`，接 `mst_monitor.ap`，covergroup 含 burst/len/size/id/4KB edge 與 2 組 cross                                         |
