@@ -30,7 +30,7 @@ class axi_transaction extends uvm_sequence_item;
 
     constraint c_strb   { 
         foreach (strb[i]) {
-            $countones(strb[i]) == (1 << size);
+            $countones(strb[i]) <= (1 << size);
         }
     }
 
