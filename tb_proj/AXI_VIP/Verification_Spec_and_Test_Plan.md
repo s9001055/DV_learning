@@ -37,7 +37,11 @@
 
 ## 2. VIP 架構分析 (Architecture Analysis)
 
-### 2.1 檔案結構
+### 2.1 架構圖 (Self-Test)
+
+![架構圖](images/architecture.png)
+
+### 2.2 檔案結構
 
 | 目錄           | 檔案                             | 職責                                                                    |
 | -------------- | -------------------------------- | ----------------------------------------------------------------------- |
@@ -65,7 +69,7 @@
 |                | `axi_fixed/incr/wrap_wr_test.sv` | 對應 3 種 burst type 之 directed test                                   |
 | `tb/`          | `tb_top.sv`                      | Top module：clock/reset、interface、SVA instantiation                   |
 
-### 2.2 環境拓撲（Loopback 模式）
+### 2.3 環境拓撲（Loopback 模式）
 
 目前 VIP 運作於 Loopback 模式：Master agent 與 Slave agent 接在同一組 `axi_if` 上，Master 送出之 transaction 由 Slave driver 接收並回應。沒有外部 DUT，用於 VIP 自身正確性驗證。
 
@@ -80,7 +84,7 @@
 | `axi_reset_monitor`    | 集中式 reset 管理：`ev_reset_start` / `ev_reset_done` event，所有 driver/monitor 統一監聽                                             |
 | `axi_protocol_checker` | 獨立 SVA module，涵蓋 VALID stable、payload stable、reset low、WRAP len/align、4KB boundary 共 15 條 assertion                        |
 
-### 2.3 功能
+### 2.4 功能
 
 - Master driver 的 **channel 分離機制**（`AXI_CH_AUTO` / `AXI_CH_AW` / `AXI_CH_W`）讓使用者可以獨立控制 AW 跟 W 的發送時機，支援 W-before-AW 測試情境
 - Slave driver 的**三種 R response mode** 讓同一套 VIP 可以驗證 FIFO、Out-of-Order、Interleaving 三種回應行為
