@@ -69,16 +69,16 @@
 
 目前 VIP 運作於 Loopback 模式：Master agent 與 Slave agent 接在同一組 `axi_if` 上，Master 送出之 transaction 由 Slave driver 接收並回應。沒有外部 DUT，用於 VIP 自身正確性驗證。
 
-| 元件                       | 實作特點                                                                                                                              |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `axi_mst_driver`           | Mailbox 架構，AW/W/AR 各自獨立 thread 驅動，支援 channel 欄位（`AXI_CH_AUTO` / `AXI_CH_AW` / `AXI_CH_W`）分離控制，可模擬 W-before-AW |
-| `axi_slv_driver`           | `handle_aw()` + `collect_w()` + `pair_and_respond()` 三段式 FIFO 配對，正確處理 AW/W 到達順序不確定性，寫入 byte-addressed `mem[]`    |
-| `axi_slv_driver`           | R channel 3 種 response mode：`AXI_R_FIFO`（先到先回）、`AXI_R_OOO`（隨機挑 burst）、`AXI_R_INTERLEAVE`（beat 層級交錯）                        |
-| `axi_mst_monitor`          | AW+W 獨立收集再 FIFO 配對，B response 用 ID matching，R channel 支援 per-ID beat counter（interleaving 安全）                         |
-| `axi_scoreboard`           | 單一 `analysis_imp`，依 direction 分流 `handle_write` / `handle_read`，用 shadow memory byte-level 比對                               |
-| `axi_coverage`             | `uvm_subscriber`，接 `mst_monitor.ap`，covergroup 含 burst/len/size/id/4KB edge 與 2 組 cross                                         |
-| `axi_reset_monitor`        | 集中式 reset 管理：`ev_reset_start` / `ev_reset_done` event，所有 driver/monitor 統一監聽                                             |
-| `axi_protocol_checker`     | 獨立 SVA module，涵蓋 VALID stable、payload stable、reset low、WRAP len/align、4KB boundary 共 15 條 assertion                        |
+| 元件                   | 實作特點                                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `axi_mst_driver`       | Mailbox 架構，AW/W/AR 各自獨立 thread 驅動，支援 channel 欄位（`AXI_CH_AUTO` / `AXI_CH_AW` / `AXI_CH_W`）分離控制，可模擬 W-before-AW |
+| `axi_slv_driver`       | `handle_aw()` + `collect_w()` + `pair_and_respond()` 三段式 FIFO 配對，正確處理 AW/W 到達順序不確定性，寫入 byte-addressed `mem[]`    |
+| `axi_slv_driver`       | R channel 3 種 response mode：`AXI_R_FIFO`（先到先回）、`AXI_R_OOO`（隨機挑 burst）、`AXI_R_INTERLEAVE`（beat 層級交錯）              |
+| `axi_mst_monitor`      | AW+W 獨立收集再 FIFO 配對，B response 用 ID matching，R channel 支援 per-ID beat counter（interleaving 安全）                         |
+| `axi_scoreboard`       | 單一 `analysis_imp`，依 direction 分流 `handle_write` / `handle_read`，用 shadow memory byte-level 比對                               |
+| `axi_coverage`         | `uvm_subscriber`，接 `mst_monitor.ap`，covergroup 含 burst/len/size/id/4KB edge 與 2 組 cross                                         |
+| `axi_reset_monitor`    | 集中式 reset 管理：`ev_reset_start` / `ev_reset_done` event，所有 driver/monitor 統一監聽                                             |
+| `axi_protocol_checker` | 獨立 SVA module，涵蓋 VALID stable、payload stable、reset low、WRAP len/align、4KB boundary 共 15 條 assertion                        |
 
 ### 2.3 功能
 
@@ -111,7 +111,7 @@ AXI VIP 介面定義於 `axi_if.sv`，參數化支援 AWIDTH / DWIDTH / IDWIDTH�
 
 ## 4. SVA Protocol Checker 分析
 
-`axi_protocol_checker.sv` 定義了assertion，涵蓋協定核心規則：
+`axi_protocol_checker.sv` 定義assertion：
 
 | SVA 編號 | Assertion 名稱        | 對應規格 | 說明                                     |
 | -------- | --------------------- | -------- | ---------------------------------------- |
@@ -146,16 +146,16 @@ AXI VIP 介面定義於 `axi_if.sv`，參數化支援 AWIDTH / DWIDTH / IDWIDTH�
 
 ### 6.1 現有 Covergroup（`cg_axi_txn`）
 
-| Coverpoint / Cross | Bins                                                                      | 說明                            |
-| ------------------ | ------------------------------------------------------------------------- | ------------------------------- |
-| `cp_dir`           | rd / wr                                                                   | Read 與 Write 方向              |
-| `cp_len`           | len1(0) / len2_4(1~3) / len8_16(7~15) / len17_64(16~63) / len_max(64~255) | Burst 長度分bin                 |
-| `cp_size`          | s[0:$clog2(STRB_W)]                                                       | 自動分bin（0~3 for 64-bit bus） |
-| `cp_burst`         | fixed / incr / wrap                                                       | 三種 burst 類型                 |
-| `cp_id`            | 自動分bin（16 bins for 4-bit ID）                                         | Transaction ID 分佈             |
-| `cp_4kb_edge`      | hit / miss                                                                | 是否剛好碰到 4KB 邊界           |
-| `cx_burst_x_len`   | cross cp_burst × cp_len                                                   | 各 burst 類型的長度分佈         |
-| `cx_dir_x_size`    | cross cp_dir × cp_size                                                    | 讀寫方向 × burst size           |
+| Coverpoint / Cross | Bins                                                                              | 說明                            |
+| ------------------ | --------------------------------------------------------------------------------- | ------------------------------- |
+| `cp_dir`           | rd / wr                                                                           | Read 與 Write 方向              |
+| `cp_len`           | len1(0) / len2_4(1 ~ 3) / len8_16(7 ~ 15) / len17_64(16 ~ 63) / len_max(64 ~ 255) | Burst 長度分bin                 |
+| `cp_size`          | s[0:$clog2(STRB_W)]                                                               | 自動分bin（0~3 for 64-bit bus） |
+| `cp_burst`         | fixed / incr / wrap                                                               | 三種 burst 類型                 |
+| `cp_id`            | 自動分bin（16 bins for 4-bit ID）                                                 | Transaction ID 分佈             |
+| `cp_4kb_edge`      | hit / miss                                                                        | 是否剛好碰到 4KB 邊界           |
+| `cx_burst_x_len`   | cross cp_burst × cp_len                                                           | 各 burst 類型的長度分佈         |
+| `cx_dir_x_size`    | cross cp_dir × cp_size                                                            | 讀寫方向 × burst size           |
 
 ---
 
