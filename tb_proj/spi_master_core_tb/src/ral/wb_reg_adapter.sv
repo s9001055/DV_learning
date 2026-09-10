@@ -12,6 +12,16 @@ class wb_reg_adapter extends uvm_reg_adapter;
         provides_responses   = 1;  // Driver 會把 response（read data / error status）填回同一個 transaction 物件
     endfunction
 
+    // 介紹 uvm_reg_bus_op
+    // typedef struct {
+    //     uvm_access_e   kind;       // UVM_READ 或 UVM_WRITE
+    //     uvm_reg_addr_t addr;       // register 的位址
+    //     uvm_reg_data_t data;       // 寫入的值（write）或讀回的值（read）
+    //     int unsigned   n_bits;     // 有效 bit 數
+    //     uvm_reg_byte_en_t byte_en; // byte enable（哪些 byte 有效）
+    //     uvm_status_e   status;     // UVM_IS_OK / UVM_NOT_OK / UVM_HAS_X
+    // } uvm_reg_bus_op;
+
     // RAL → Wishbone transaction (reg2bus)
     virtual function uvm_sequence_item reg2bus(const ref uvm_reg_bus_op rw);
         wb_transaction tr = wb_transaction::type_id::create("wb_reg_tr");
