@@ -2,6 +2,30 @@
 
 如果存取行為跟標準的「一筆 read / 一筆 write」差太多（例如需要多筆 bus transaction、特殊的 handshake 序列），就不用 adapter 了，改用 frontdoor sequence：
 
+rw_info 是 uvm_reg_frontdoor 的內建成員變數，定義在 UVM base class 裡，當 RAL 呼叫 reg.write() 或 reg.read() 時，RAL framework 會自動把存取資訊填進去，你的 frontdoor sequence 直接拿來用就好。
+
+### rw_info 的型別
+
+```
+class uvm_reg_frontdoor extends uvm_reg_sequence;
+    uvm_reg_item rw_info; // ← 這個是內建的，不用自己宣告
+endclass
+```
+
+### uvm_reg_item 包含的欄位：
+
+| 欄位         | 型別            | 誰填的   | 說明                            |
+| ------------ | --------------- | -------- | ------------------------------- |
+| kind         | uvm_access_e    | RAL      | UVM_READ 或 UVM_WRITE           |
+| addr         | uvm_reg_addr_t  | RAL      | register 的位址                 |
+| data         | uvm_reg_data_t  | RAL      | 填（write）/ 你填（read） 資料  |
+| status       | uvm_status_e    | 使用者填 | UVM_IS_OK / UVM_NOT_OK          |
+| map          | uvm_reg_map     | RAL      | 走哪個 address map              |
+| element      | uvm_object      | RAL      | 是哪個 register 或 field 觸發的 |
+| element_kind | uvm_elem_kind_e | RAL      | UVM_REG / UVM_FIELD / UVM_MEM   |
+
+### 範例CODE
+
 ```
 class spi_ctrl_frontdoor extends uvm_reg_frontdoor;`uvm_object_utils(spi_ctrl_frontdoor)
 
