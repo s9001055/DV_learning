@@ -45,5 +45,4 @@ env.reg_model.ctrl.set_frontdoor(fd);
 
 // 之後 ctrl.write() 就會自動走你的 frontdoor，而不是 adapter
 env.reg_model.ctrl.write(status, 32'h0101); // 自動變成兩筆 bus write
-`
 ```
