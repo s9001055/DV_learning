@@ -44,7 +44,6 @@ class wb_driver extends uvm_driver #(wb_transaction);
     endtask
 
     virtual task reset_signals();
-        @(posedge vif.clk);
         vif.mst_cb.cyc   <= 1'b0;
         vif.mst_cb.stb   <= 1'b0;
         vif.mst_cb.we    <= 1'b0;
