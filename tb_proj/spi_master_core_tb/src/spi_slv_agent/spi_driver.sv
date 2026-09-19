@@ -4,9 +4,10 @@
 class spi_driver extends uvm_driver #(spi_transaction);
     `uvm_component_utils(spi_driver)
 
-    virtual spi_if vif;
+    virtual spi_if  vif;
+    spi_cfg         spi_cfg;
 
-    reset_monitor rst_mon;
+    reset_monitor   rst_mon;
 
     // SPI mode configuration (set by test via config_db or field)
     bit cpol = 0;
@@ -25,12 +26,9 @@ class spi_driver extends uvm_driver #(spi_transaction);
             `uvm_fatal(get_type_name(), "Cannot get rst_mon from config_db")
         end
 
-        if (!uvm_config_db#(bit)::get(this, "", "cpol", cpol)) begin
-            `uvm_info(get_type_name(), "No cpol found, using default (cpol = 0)", UVM_MEDIUM)
-        end
-
-        if (!uvm_config_db#(bit)::get(this, "", "cpha", cpha)) begin
-            `uvm_info(get_type_name(), "No cpha found, using default (cpha = 0)", UVM_MEDIUM)
+        if (!uvm_config_db#(spi_cfg)::get(this, "", "spi_cfg", spi_cfg)) begin
+            `uvm_info(get_type_name(), "No spi_cfg found, using default (cpol = 0, cpha = 0)", UVM_MEDIUM)
+            spi_cfg = spi_cfg::type_id::create("spi_cfg");
         end
 
         `uvm_info(get_type_name(), $sformatf("cpol = %d cpha = %d", cpol, cpha), UVM_MEDIUM)
