@@ -9,10 +9,6 @@ class spi_driver extends uvm_driver #(spi_transaction);
 
     reset_monitor   rst_mon;
 
-    // SPI mode configuration (set by test via config_db or field)
-    bit cpol = 0;
-    bit cpha = 0;
-
     function new(string name, uvm_component parent);
         super.new(name, parent);
     endfunction
@@ -31,7 +27,7 @@ class spi_driver extends uvm_driver #(spi_transaction);
             spi_cfg = spi_cfg::type_id::create("spi_cfg");
         end
 
-        `uvm_info(get_type_name(), $sformatf("cpol = %d cpha = %d", cpol, cpha), UVM_MEDIUM)
+        `uvm_info(get_type_name(), $sformatf("spi_cfg.cpol = %d spi_cfg.cpha = %d", spi_cfg.cpol, spi_cfg.cpha), UVM_MEDIUM)
     endfunction
 
     task run_phase(uvm_phase phase);
@@ -75,14 +71,14 @@ class spi_driver extends uvm_driver #(spi_transaction);
                 bit_idx = tr.lsb_first ? i : (tr.char_len - 1 - i);
 
                 // Drive MISO on the appropriate edge
-                if (cpha == 0) begin
+                if (spi_cfg.cpha == 0) begin
                     // Mode 0/2: data setup before first clock edge
                     vif.slv_cb.miso <= tr.miso_data[bit_idx];
-                    if (cpol == 0) @(posedge vif.sclk);
+                    if (spi_cfg.cpol == 0) @(posedge vif.sclk);
                     else           @(negedge vif.sclk);
                 end else begin
                     // Mode 1/3: data changes on first edge, sampled on second
-                    if (cpol == 0) @(posedge vif.sclk);
+                    if (spi_cfg.cpol == 0) @(posedge vif.sclk);
                     else           @(negedge vif.sclk);
                     vif.slv_cb.miso <= tr.miso_data[bit_idx];
                 end
